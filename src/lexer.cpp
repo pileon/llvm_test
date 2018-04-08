@@ -26,6 +26,28 @@ namespace lexer
         if (std::isdigit(ch))
         {
             // A number
+            std::string number;
+
+            while (std::isdigit(ch))
+            {
+                number += static_cast<char>(ch);
+                ch = input_.get();
+            }
+
+            if (ch == '.')
+            {
+
+                do
+                {
+                    number += static_cast<char>(ch);
+                    ch = input_.get();
+                } while (std::isdigit(ch));
+            }
+
+            // The last character we read was not part of the number, put it back
+            input_.unget();
+
+            return token(token::t_number, line_, file_, std::stod(number));
         }
 
         if (std::isalpha(ch) || ch == '_')
