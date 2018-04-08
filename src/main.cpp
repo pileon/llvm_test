@@ -26,8 +26,23 @@ namespace
         {
             switch (c)
             {
+            case '\a':
+                out += "\\n";
+                break;
+            case '\b':
+                out += "\\b";
+                break;
+            case '\x1b':
+                out += "\\e";
+                break;
             case '\n':
                 out += "\\n";
+                break;
+            case '\r':
+                out += "\\r";
+                break;
+            case '\v':
+                out += "\\v";
                 break;
 
             default:
