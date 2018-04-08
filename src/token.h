@@ -58,6 +58,11 @@ namespace lexer
             return value_;
         }
 
+        value_type& value()
+        {
+            return value_;
+        }
+
     private:
 
         token_type      token_;
