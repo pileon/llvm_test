@@ -16,9 +16,41 @@
 #include <sstream>
 #include "lexer.h"
 
+namespace
+{
+    std::string unescape(std::string const& in)
+    {
+        std::string out;
+
+        for (auto const c : in)
+        {
+            switch (c)
+            {
+            case '\n':
+                out += "\\n";
+                break;
+
+            default:
+                out += c;
+                break;
+            }
+        }
+
+        return out;
+    }
+}
+
 int main()
 {
-    std::istringstream input("a\n1 foo 23\nbar ho\n45.67 *\n7 | (boo)\n");
+    std::istringstream input(
+        R"(a boo
+          foo bar
+          12.34 + 1234
+          hello = function(name) {
+              print("Your name is ", name, "\n")
+          }
+          )");
+
     lexer::lexer l(input, "<stdin>");
 
     while (true)
@@ -30,9 +62,9 @@ int main()
         {
             std::cout << " (" << token.value().n << ')';
         }
-        else if (token == lexer::token::t_identifier)
+        else if (token == lexer::token::t_identifier || token == lexer::token::t_string)
         {
-            std::cout << " (" << token.value().s << ')';
+            std::cout << " (" << unescape(token.value().s) << ')';
         }
         else if (token == lexer::token::t_eof || token == lexer::token::t_error)
         {

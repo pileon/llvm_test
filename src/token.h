@@ -29,8 +29,9 @@ namespace lexer
             t_eof           = -2,
             t_identifier    = -3,
             t_number        = -4,
+            t_string        = -5,
 
-            t_function      = -5,
+            t_function      = -6,
             // TODO: The keywords and operators
 
         };

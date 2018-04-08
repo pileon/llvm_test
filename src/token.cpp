@@ -23,7 +23,9 @@ namespace lexer
             { t_error       , "t_error" },
             { t_eof         , "t_eof" },
             { t_number      , "t_number" },
-            { t_identifier  , "t_identifier" }
+            { t_identifier  , "t_identifier" },
+            { t_string      , "t_string" },
+            { t_function    , "t_function" }
         };
 
         if (auto const& i = token_to_string.find(token_); i != end(token_to_string))

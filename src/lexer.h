@@ -37,6 +37,7 @@ namespace lexer
 
         void skip_space();
         token check_keyword(std::string);
+        std::string get_string();
     };
 }
 

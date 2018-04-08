@@ -71,6 +71,12 @@ namespace lexer
             return check_keyword(std::move(word));
         }
 
+        if (ch == '\"')
+        {
+            // A string constant
+            return token(token::t_string, line_, file_, get_string());
+        }
+
         return token(input_.eof() ? token::t_eof : static_cast<token::token_type>(ch), line_, file_);
     }
 
@@ -98,5 +104,65 @@ namespace lexer
         }
 
         return token(token::t_identifier, line_, file_, std::move(word));
+    }
+
+    std::string lexer::get_string()
+    {
+        std::string s;
+
+        while (true)
+        {
+            int ch = input_.get();
+
+            if (input_.eof() || ch == std::istream::traits_type::eof())
+            {
+                // TODO: ERROR!
+                break;
+            }
+
+            if (ch == '\"')
+            {
+                break;
+            }
+            else if (ch == '\n')
+            {
+                ++line_;
+            }
+            else if (ch == '\\')
+            {
+                ch = input_.get();
+
+                switch (ch)
+                {
+                case 'a':
+                    ch = '\a';
+                    break;
+                case 'b':
+                    ch = '\b';
+                    break;
+                case 'e':
+                    ch = '\x1b';
+                    break;
+                case 'n':
+                    ch = '\n';
+                    break;
+                case 'r':
+                    ch = '\r';
+                    break;
+                case 'v':
+                    ch = '\v';
+                    break;
+
+                default:
+                    // TODO: Warning
+                    ch = ' ';
+                    break;
+                }
+            }
+
+            s += static_cast<char>(ch);
+        }
+
+        return s;
     }
 }
