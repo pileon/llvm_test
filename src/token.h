@@ -30,7 +30,9 @@ namespace lexer
             t_identifier    = -3,
             t_number        = -4,
 
+            t_function      = -5,
             // TODO: The keywords and operators
+
         };
 
         union value_type
@@ -85,6 +87,11 @@ namespace lexer
         value_type& value()
         {
             return value_;
+        }
+
+        std::uint32_t line() const
+        {
+            return line_;
         }
 
         friend std::ostream& operator<<(std::ostream& os, token const& t)

@@ -18,14 +18,14 @@
 
 int main()
 {
-    std::istringstream input("a 1 foo 23 bar ho 45.67 * 7 | (boo)");
+    std::istringstream input("a\n1 foo 23\nbar ho\n45.67 *\n7 | (boo)\n");
     lexer::lexer l(input, "<stdin>");
 
     while (true)
     {
         auto token = l.next();
 
-        std::cout << "Got token " << token;
+        std::cout << "Line " << token.line() << ": Got token " << token;
         if (token == lexer::token::t_number)
         {
             std::cout << " (" << token.value().n << ')';

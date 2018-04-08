@@ -24,7 +24,7 @@ namespace lexer
     {
     public:
         lexer(std::istream& input_, std::string const& file_)
-            : input_(input_), file_(file_)
+            : input_(input_), file_(file_), line_(1)
         {
         }
 
@@ -36,6 +36,7 @@ namespace lexer
         std::uint32_t line_;    // Current line
 
         void skip_space();
+        token check_keyword(std::string);
     };
 }
 

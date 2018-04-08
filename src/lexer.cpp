@@ -14,6 +14,7 @@
 
 #include "lexer.h"
 #include <istream>
+#include <unordered_map>
 
 namespace lexer
 {
@@ -67,7 +68,7 @@ namespace lexer
             // The last character we read was not part of the identifier, put it back
             input_.unget();
 
-            return token(token::t_identifier, line_, file_, word);
+            return check_keyword(std::move(word));
         }
 
         return token(input_.eof() ? token::t_eof : static_cast<token::token_type>(ch), line_, file_);
@@ -83,5 +84,19 @@ namespace lexer
                 ++line_;
             }
         }
+    }
+
+    token lexer::check_keyword(std::string word)
+    {
+        static std::unordered_map<std::string, token::token_type> const keywords = {
+            { "function", token::t_function }
+        };
+
+        if (auto const it = keywords.find(word); it != end(keywords))
+        {
+            return token(it->second, line_, file_, std::move(word));
+        }
+
+        return token(token::t_identifier, line_, file_, std::move(word));
     }
 }
