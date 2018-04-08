@@ -25,8 +25,9 @@ namespace lexer
     public:
         enum token_type
         {
-            t_eof           = -1,
-            t_identifier    = -2,
+            t_error         = -1,
+            t_eof           = -2,
+            t_identifier    = -3,
             t_number        = -4,
 
             // TODO: The keywords and operators
@@ -52,6 +53,29 @@ namespace lexer
             double        n;
             std::uint64_t i;
         };
+
+        token(token_type token_, uint32_t line_, std::string file_)
+            : token_(token_), line_(line_), file_(std::move(file_))
+        {
+        }
+
+        token(token_type token_, uint32_t line_, std::string file_, std::string value)
+            : token_(token_), line_(line_), file_(std::move(file_))
+        {
+            value_.s = std::move(value);
+        }
+
+        token(token_type token_, uint32_t line_, std::string file_, double value)
+            : token_(token_), line_(line_), file_(std::move(file_))
+        {
+            value_.n = value;
+        }
+
+        token(token_type token_, uint32_t line_, std::string file_, std::uint64_t value)
+            : token_(token_), line_(line_), file_(std::move(file_))
+        {
+            value_.i = value;
+        }
 
         value_type value() const
         {

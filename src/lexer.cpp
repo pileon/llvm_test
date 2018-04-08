@@ -13,15 +13,49 @@
 // limitations under the License.
 
 #include "lexer.h"
+#include <istream>
 
 namespace lexer
 {
     token lexer::next()
     {
-        return token();
+        skip_space();
+
+        int ch = input_.get();
+
+        if (std::isdigit(ch))
+        {
+            // A number
+        }
+
+        if (std::isalpha(ch) || ch == '_')
+        {
+            // An identifier or a keyword
+            std::string word;
+            while (std::isalnum(ch) || ch == '_')
+            {
+                word += static_cast<char>(ch);
+                ch = input_.get();
+            }
+
+            // The last character we read was not part of the identifier, put it back
+            input_.unget();
+
+            return token(token::t_identifier, line_, file_, word);
+        }
+
+        return token(token::t_error, line_, file_);
     }
 
     void lexer::skip_space()
     {
+        while (isspace(input_.peek()))
+        {
+            int ch = input_.get();
+            if (ch == '\n')
+            {
+                ++line_;
+            }
+        }
     }
 }
