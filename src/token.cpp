@@ -12,4 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <unordered_map>
 #include "token.h"
+
+namespace lexer
+{
+    std::string token::to_string() const
+    {
+        static std::unordered_map<token_type, std::string> const token_to_string = {
+            { t_error       , "t_error" },
+            { t_eof         , "t_eof" },
+            { t_number      , "t_number" },
+            { t_identifier  , "t_identifier" }
+        };
+
+        if (auto const& i = token_to_string.find(token_); i != end(token_to_string))
+        {
+            return i->second;
+        }
+
+        return std::string(1, static_cast<char>(token_));
+    }
+}

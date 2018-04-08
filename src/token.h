@@ -87,6 +87,28 @@ namespace lexer
             return value_;
         }
 
+        friend std::ostream& operator<<(std::ostream& os, token const& t)
+        {
+            return os << to_string(t);
+        }
+
+        static std::string to_string(token const& t)
+        {
+            return t.to_string();
+        }
+
+        std::string to_string() const;
+
+        bool operator==(token_type token)
+        {
+            return token_ == token;
+        }
+
+        bool operator==(token const& other)
+        {
+            return *this == other.token_;
+        }
+
     private:
 
         token_type      token_;

@@ -22,6 +22,10 @@ namespace lexer
         skip_space();
 
         int ch = input_.get();
+        if (input_.eof() || ch == std::istream::traits_type::eof())
+        {
+            return token(token::t_eof, line_, file_);
+        }
 
         if (std::isdigit(ch))
         {
@@ -66,12 +70,12 @@ namespace lexer
             return token(token::t_identifier, line_, file_, word);
         }
 
-        return token(token::t_error, line_, file_);
+        return token(input_.eof() ? token::t_eof : static_cast<token::token_type>(ch), line_, file_);
     }
 
     void lexer::skip_space()
     {
-        while (isspace(input_.peek()))
+        while (std::isspace(input_.peek()))
         {
             int ch = input_.get();
             if (ch == '\n')
