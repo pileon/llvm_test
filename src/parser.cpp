@@ -14,6 +14,7 @@
 
 #include "parser.h"
 #include <memory>
+#include <iostream>
 
 namespace parser
 {
@@ -64,7 +65,18 @@ namespace parser
 
     ast::node_pointer parser::expression()
     {
-        return ast::node_pointer();
+        ast::node_pointer node;
+
+        if (current_ == token::t_number)
+        {
+            node = std::make_unique<ast::number>(current_.value().n);
+        }
+        else if (current_ == token::t_string)
+        {
+            node = std::make_unique<ast::string>(current_.value().s);
+        }
+
+        return std::move(node);
     }
 
     lexer::token parser::match(char ch)
