@@ -83,11 +83,11 @@ namespace
             std::cout << "Line " << token.line() << ": Got token " << token;
             if (token == lexer::token::t_number)
             {
-                std::cout << " (" << token.value().n << ')';
+                std::cout << " (" << token.value<double>() << ')';
             }
             else if (token == lexer::token::t_identifier || token == lexer::token::t_string)
             {
-                std::cout << " (" << unescape(token.value().s) << ')';
+                std::cout << " (" << unescape(token.value<std::string>()) << ')';
             }
             else if (token == lexer::token::t_eof || token == lexer::token::t_error)
             {

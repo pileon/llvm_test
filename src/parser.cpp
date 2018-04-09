@@ -50,7 +50,7 @@ namespace parser
     {
         if (current_ == token::t_identifier)
         {
-            auto id = std::make_unique<ast::identifier>(current_.value().s);
+            auto id = std::make_unique<ast::identifier>(current_.value<std::string>());
             current_ = lexer_.next();
             return std::move(id);
         }
@@ -65,15 +65,15 @@ namespace parser
 
         if (current_ == token::t_number)
         {
-            node = std::make_unique<ast::number>(current_.value().n);
+            node = std::make_unique<ast::number>(current_.value<double>());
         }
         else if (current_ == token::t_string)
         {
-            node = std::make_unique<ast::string>(current_.value().s);
+            node = std::make_unique<ast::string>(current_.value<std::string>());
         }
         else if (current_ == token::t_identifier)
         {
-            node = std::make_unique<ast::identifier>(current_.value().s);
+            node = std::make_unique<ast::identifier>(current_.value<std::string>());
         }
         else
         {

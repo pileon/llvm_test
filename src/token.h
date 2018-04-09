@@ -17,6 +17,7 @@
 #define LLVM_TEST_TOKEN_H
 
 #include <string>
+#include <any>
 
 namespace lexer
 {
@@ -36,35 +37,7 @@ namespace lexer
 
         };
 
-        union value_type
-        {
-            value_type()
-                : s{}
-            {
-            }
-
-            value_type(value_type const& other)
-                : s{other.s}
-            {
-            }
-
-            ~value_type()
-            {
-            }
-
-            value_type& operator=(value_type const& other)
-            {
-                if (this != &other)
-                {
-                    s = other.s;
-                }
-                return *this;
-            }
-
-            std::string   s;
-            double        n;
-            std::uint64_t i;
-        };
+        using value_type = std::any;
 
         token(token_type token_, uint32_t line_, std::string file_)
             : token_(token_), line_(line_), file_(std::move(file_))
@@ -72,21 +45,18 @@ namespace lexer
         }
 
         token(token_type token_, uint32_t line_, std::string file_, std::string value)
-            : token_(token_), line_(line_), file_(std::move(file_))
+            : token_(token_), line_(line_), file_(std::move(file_)), value_(std::move(value))
         {
-            value_.s = std::move(value);
         }
 
         token(token_type token_, uint32_t line_, std::string file_, double value)
-            : token_(token_), line_(line_), file_(std::move(file_))
+            : token_(token_), line_(line_), file_(std::move(file_)), value_(value)
         {
-            value_.n = value;
         }
 
         token(token_type token_, uint32_t line_, std::string file_, std::uint64_t value)
-            : token_(token_), line_(line_), file_(std::move(file_))
+            : token_(token_), line_(line_), file_(std::move(file_)), value_(value)
         {
-            value_.i = value;
         }
 
         token()
@@ -122,14 +92,10 @@ namespace lexer
             return *this;
         }
 
-        value_type value() const
+        template<typename T>
+        T value() const
         {
-            return value_;
-        }
-
-        value_type& value()
-        {
-            return value_;
+            return std::any_cast<T>(value_);
         }
 
         std::string file() const
