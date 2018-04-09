@@ -15,6 +15,8 @@
 #include <iostream>
 #include <sstream>
 #include "lexer.h"
+#include "parser.h"
+
 #ifdef __unix__
 # include <unistd.h>
 #endif
@@ -95,11 +97,25 @@ namespace
             std::cout << '\n';
         }
     }
+
+    void parser_test()
+    {
+        std::istringstream input(
+            R"(foo = 123
+               bar = foo
+            )");
+
+        lexer::lexer l(input, "<stdin>");
+        parser::parser p(l);
+
+        auto root = p.parse();
+    }
 }
 
 int main()
 {
-    lexer_test();
+    //lexer_test();
+    parser_test();
 
     // This seems to be needed when running in Clion from inside WSL
     std::cerr << std::flush;

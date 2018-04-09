@@ -59,6 +59,7 @@ namespace parser
             current_ = lexer_.next();
             return std::move(id);
         }
+        expected(token::t_identifier);
 
         return nullptr;
     }
@@ -75,6 +76,10 @@ namespace parser
         {
             node = std::make_unique<ast::string>(current_.value().s);
         }
+        else
+        {
+            expected("expression");
+        }
 
         return std::move(node);
     }
@@ -87,7 +92,22 @@ namespace parser
         }
         else
         {
-            std::cout << current_.file() << ':' << current_.line() << " :: Syntax error: Expected '" << ch << "', got " << current_ << '\n';
+            expected(ch);
         }
+    }
+
+    void parser::expected(char ch, token tok)
+    {
+        std::cout << current_.file() << ':' << current_.line() << " :: Syntax error: Expected '" << ch << "', got " << tok << '\n';
+    }
+
+    void parser::expected(token expected, token actual)
+    {
+        std::cout << current_.file() << ':' << current_.line() << " :: Syntax error: Expected " << expected << ", got " << actual << '\n';
+    }
+
+    void parser::expected(std::string const& exp, token actual)
+    {
+        std::cout << current_.file() << ':' << current_.line() << " :: Syntax error: Expected " << exp << ", got " << actual << '\n';
     }
 }

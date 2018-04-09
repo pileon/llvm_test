@@ -42,6 +42,25 @@ namespace parser
         ast::node_pointer statement();
         ast::node_pointer identifier();
         ast::node_pointer expression();
+
+        void expected(char, lexer::token);
+        void expected(lexer::token, lexer::token);
+        void expected(std::string const&, lexer::token);
+
+        void expected(char ch)
+        {
+            expected(ch, current_);
+        }
+
+        void expected(lexer::token token)
+        {
+            expected(token, current_);
+        }
+
+        void expected(std::string const& exp)
+        {
+            expected(exp, current_);
+        }
     };
 }
 
