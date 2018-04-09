@@ -87,7 +87,7 @@ namespace parser
         }
         else
         {
-            // TODO: Error
+            std::cout << current_.file() << ':' << current_.line() << " :: Syntax error: Expected '" << ch << "', got " << current_ << '\n';
         }
     }
 }

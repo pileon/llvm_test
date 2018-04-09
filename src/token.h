@@ -132,6 +132,11 @@ namespace lexer
             return value_;
         }
 
+        std::string file() const
+        {
+            return file_;
+        }
+
         std::uint32_t line() const
         {
             return line_;
