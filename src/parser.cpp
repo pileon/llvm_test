@@ -34,7 +34,7 @@ namespace parser
             }
         }
 
-        return ast::node_pointer();
+        return std::move(top_);
     }
 
     ast::node_pointer parser::statement()

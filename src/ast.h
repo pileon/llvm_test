@@ -19,15 +19,26 @@
 #include <string>
 #include <memory>
 #include <vector>
+#include <ostream>
 
 namespace ast
 {
     struct ast_base
     {
         virtual ~ast_base() = default;
+
+        virtual std::ostream& output(std::ostream& os)
+        {
+            return os;
+        }
     };
 
     using node_pointer = std::unique_ptr<ast_base>;
+
+    inline std::ostream& operator<<(std::ostream& os, node_pointer const& node)
+    {
+        return node->output(os);
+    }
 
     struct assignment : ast_base
     {
@@ -38,6 +49,11 @@ namespace ast
 
         node_pointer left;
         node_pointer right;
+
+        std::ostream& output(std::ostream& os) override
+        {
+            return os << "assignment(\n\t" << left << "\n\t" << right << ')';
+        }
     };
 
     struct number : ast_base
@@ -48,6 +64,11 @@ namespace ast
         }
 
         double value;
+
+        std::ostream& output(std::ostream& os) override
+        {
+            return os << "number(" << value << ')';
+        }
     };
 
     struct identifier : ast_base
@@ -58,6 +79,11 @@ namespace ast
         }
 
         std::string name;
+
+        std::ostream& output(std::ostream& os) override
+        {
+            return os << "identifier(" << name << ')';
+        }
     };
 
     struct string : ast_base
@@ -68,6 +94,11 @@ namespace ast
         }
 
         std::string str;
+
+        std::ostream& output(std::ostream& os) override
+        {
+            return os << "identifier(\"" << str << "\")";
+        }
     };
 
     struct function : ast_base
@@ -83,6 +114,25 @@ namespace ast
 
         std::vector<node_pointer> arguments;
         std::vector<node_pointer> statements;
+
+        std::ostream& output(std::ostream& os) override
+        {
+            os << "function(\n\t";
+            if (!arguments.empty())
+            {
+                // TODO: Implement
+            }
+
+            if (!statements.empty())
+            {
+                for (auto const& s : statements)
+                {
+                    os << s << '\n';
+                }
+            }
+
+            return os << ')';
+        }
     };
 
     struct binary : ast_base

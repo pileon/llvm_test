@@ -16,6 +16,7 @@
 #include <sstream>
 #include "lexer.h"
 #include "parser.h"
+#include "ast.h"
 
 #ifdef __unix__
 # include <unistd.h>
@@ -109,7 +110,10 @@ namespace
         lexer::lexer l(input, "<stdin>");
         parser::parser p(l);
 
-        auto root = p.parse();
+        if (auto root = p.parse(); root != nullptr)
+        {
+            std::cout << root << '\n';
+        }
     }
 }
 

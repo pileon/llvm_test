@@ -23,7 +23,7 @@ add_definitions(${LLVM_DEFINITIONS})
 # that we wish to use
 llvm_map_components_to_libnames(llvm_libs support core irreader)
 
-add_executable(llvm_test main.cpp token.cpp token.h lexer.cpp lexer.h ast.h parser.cpp parser.h)
+add_executable(llvm_test main.cpp token.cpp token.h lexer.cpp lexer.h ast.h parser.cpp parser.h ast.cpp)
 
 # Link against LLVM libraries
 target_link_libraries(llvm_test ${llvm_libs})
