@@ -17,18 +17,22 @@
 #define LLVM_TEST_AST_H
 
 #include <string>
+#include <memory>
+#include <vector>
 
 namespace ast
 {
     struct ast_base
     {
-
+        virtual ~ast_base()
+        {
+        }
     };
 
     struct assignment : ast_base
     {
-        ast_base* left;
-        ast_base* right;
+        std::unique_ptr<ast_base> left;
+        std::unique_ptr<ast_base> right;
     };
 
     struct number : ast_base
@@ -44,6 +48,19 @@ namespace ast
     struct string : ast_base
     {
         std::string string;
+    };
+
+    struct function : ast_base
+    {
+        std::vector<std::unique_ptr<ast_base>> arguments;
+        std::vector<std::unique_ptr<ast_base>> statements;
+    };
+
+    struct binary : ast_base
+    {
+        char op;
+        std::unique_ptr<ast_base> left;
+        std::unique_ptr<ast_base> right;
     };
 }
 
