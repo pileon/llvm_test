@@ -16,11 +16,17 @@
 #ifndef LLVM_TEST_PARSER_H
 #define LLVM_TEST_PARSER_H
 
+#include "ast.h"
+
 namespace parser
 {
     class parser
     {
-
+    public:
+        parser()
+        {
+            auto n = std::make_unique<ast::binary>('+', std::make_unique<ast::number>(12), std::make_unique<ast::number>(21));
+        }
     };
 }
 
