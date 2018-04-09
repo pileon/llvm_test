@@ -72,6 +72,10 @@ namespace ast
 
     struct function : ast_base
     {
+        function()
+        {
+        }
+
         function(std::vector<node_pointer> args, std::vector<node_pointer> stmts)
             : arguments(std::move(args)), statements(std::move(stmts))
         {

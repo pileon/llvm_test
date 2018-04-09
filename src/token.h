@@ -52,6 +52,15 @@ namespace lexer
             {
             }
 
+            value_type& operator=(value_type const& other)
+            {
+                if (this != &other)
+                {
+                    s = other.s;
+                }
+                return *this;
+            }
+
             std::string   s;
             double        n;
             std::uint64_t i;
@@ -78,6 +87,39 @@ namespace lexer
             : token_(token_), line_(line_), file_(std::move(file_))
         {
             value_.i = value;
+        }
+
+        token()
+        {
+        }
+
+        token(token&&) = default;
+        token(token const&) = default;
+
+        token& operator=(token&& other)
+        {
+            if (this != &other)
+            {
+                token_ = other.token_;
+                value_ = std::move(other.value_);
+                line_  = other.line_;
+                file_  = other.file_;
+            }
+
+            return *this;
+        }
+
+        token& operator=(token const& other)
+        {
+            if (this != &other)
+            {
+                token_ = other.token_;
+                value_ = other.value_;
+                line_  = other.line_;
+                file_  = other.file_;
+            }
+
+            return *this;
         }
 
         value_type value() const
@@ -107,14 +149,19 @@ namespace lexer
 
         std::string to_string() const;
 
-        bool operator==(token_type token)
+        bool operator==(token_type token) const
         {
             return token_ == token;
         }
 
-        bool operator==(token const& other)
+        bool operator==(token const& other) const
         {
             return *this == other.token_;
+        }
+
+        bool operator==(char ch) const
+        {
+            return *this == static_cast<token_type>(ch);
         }
 
     private:

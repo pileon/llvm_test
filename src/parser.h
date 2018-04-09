@@ -17,16 +17,31 @@
 #define LLVM_TEST_PARSER_H
 
 #include "ast.h"
+#include "token.h"
+#include "lexer.h"
 
 namespace parser
 {
     class parser
     {
     public:
-        parser()
+        parser(lexer::lexer lexer)
+            : lexer_(std::move(lexer))
         {
-            auto n = std::make_unique<ast::binary>('+', std::make_unique<ast::number>(12), std::make_unique<ast::number>(21));
         }
+
+        ast::node_pointer parse();
+
+    private:
+        lexer::lexer lexer_;
+        std::unique_ptr<ast::function> top_;    // Top-level function
+        lexer::token current_;                  // Current token
+
+        lexer::token match(char ch);
+
+        ast::node_pointer statement();
+        ast::node_pointer identifier();
+        ast::node_pointer expression();
     };
 }
 
