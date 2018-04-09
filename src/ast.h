@@ -60,6 +60,12 @@ namespace ast
         std::unique_ptr<ast_base> left;
         std::unique_ptr<ast_base> right;
     };
+
+    struct call : ast_base
+    {
+        std::string name;   // Function name
+        std::vector<std::unique_ptr<ast_base>> arguments;   // Argument list
+    };
 }
 
 #endif //LLVM_TEST_AST_H
