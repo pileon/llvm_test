@@ -103,6 +103,7 @@ namespace
         std::istringstream input(
             R"(foo = 123
                bar = foo
+               hoo = "Hello"
             )");
 
         lexer::lexer l(input, "<stdin>");

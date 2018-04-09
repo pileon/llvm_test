@@ -23,15 +23,10 @@ namespace parser
     ast::node_pointer parser::parse()
     {
         top_ = std::make_unique<ast::function>();
+        current_ = lexer_.next();
 
-        while (true)
+        while (current_ != token::t_eof)
         {
-            current_ = lexer_.next();
-            if (current_ == token::t_eof)
-            {
-                break;
-            }
-
             auto stmt = statement();
             if (stmt != nullptr)
             {
@@ -76,10 +71,15 @@ namespace parser
         {
             node = std::make_unique<ast::string>(current_.value().s);
         }
+        else if (current_ == token::t_identifier)
+        {
+            node = std::make_unique<ast::identifier>(current_.value().s);
+        }
         else
         {
             expected("expression");
         }
+        current_ = lexer_.next();
 
         return std::move(node);
     }

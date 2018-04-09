@@ -169,6 +169,12 @@ namespace lexer
             return *this == static_cast<token_type>(ch);
         }
 
+        template<typename T>
+        bool operator!=(T const& other)
+        {
+            return !operator==(other);
+        }
+
     private:
 
         token_type      token_;
