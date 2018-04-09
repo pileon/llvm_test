@@ -24,9 +24,7 @@ namespace ast
 {
     struct ast_base
     {
-        virtual ~ast_base()
-        {
-        }
+        virtual ~ast_base() = default;
     };
 
     struct assignment : ast_base
