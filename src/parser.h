@@ -49,6 +49,13 @@ namespace parser
         ast::node_pointer comparison_expression();
         ast::node_pointer add_sub_expression();
         ast::node_pointer mul_div_expression();
+        ast::node_pointer bit_and_expression();
+        ast::node_pointer bit_or_expression();
+        ast::node_pointer bit_xor_expression();
+        ast::node_pointer bit_shift_expression();
+        ast::node_pointer prefix_expression();
+        ast::node_pointer select_expression();
+        ast::node_pointer suffix_expression();
         ast::node_pointer primary_expression();
 
         void expected(char, lexer::token);

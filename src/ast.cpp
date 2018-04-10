@@ -115,6 +115,10 @@ namespace ast
                 return "~=";
             case lexer::token::t_aprx_not_equal:
                 return "~!=";
+            case lexer::token::t_left_shift:
+                return "<<";
+            case lexer::token::t_right_shift:
+                return ">>";
 
             default:
                 return "<unknown>";

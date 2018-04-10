@@ -41,6 +41,8 @@ namespace lexer
             t_gt_equal      = -12,
             t_aprx_equal    = -13,
             t_aprx_not_equal= -14,
+            t_left_shift    = -15,
+            t_right_shift   = -16
         };
 
         using value_type = std::any;

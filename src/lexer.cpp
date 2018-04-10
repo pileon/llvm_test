@@ -119,6 +119,11 @@ namespace lexer
                 return token(token::t_lt_equal, line_, file_);
             }
 
+            if (other == '<')
+            {
+                return token(token::t_left_shift, line_, file_);
+            }
+
             input_.unget();
         }
 
@@ -128,6 +133,11 @@ namespace lexer
             if (other == '=')
             {
                 return token(token::t_gt_equal, line_, file_);
+            }
+
+            if (other == '>')
+            {
+                return token(token::t_right_shift, line_, file_);
             }
 
             input_.unget();

@@ -100,7 +100,7 @@ namespace parser
     {
         auto left = logic_or_expression();
 
-        while (current_ == token::t_and)
+        if (current_ == token::t_and)
         {
             current_ = lexer_.next();
             return std::make_unique<ast::binary>(token::t_and, std::move(left), std::move(logic_and_expression()));
@@ -113,7 +113,7 @@ namespace parser
     {
         auto left = logic_not_expression();
 
-        while (current_ == token::t_or)
+        if (current_ == token::t_or)
         {
             current_ = lexer_.next();
             return std::make_unique<ast::binary>(token::t_or, std::move(left), std::move(logic_or_expression()));
@@ -212,7 +212,7 @@ namespace parser
 
     ast::node_pointer parser::mul_div_expression()
     {
-        auto left = primary_expression();
+        auto left = bit_and_expression();
 
         while (true)
         {
@@ -238,6 +238,80 @@ namespace parser
         }
 
         return left;
+    }
+
+    ast::node_pointer parser::bit_and_expression()
+    {
+        auto left = bit_or_expression();
+
+        if (current_ == '&')
+        {
+            current_ = lexer_.next();
+            return std::make_unique<ast::binary>('&', std::move(left), std::move(bit_and_expression()));
+        }
+
+        return left;
+    }
+
+    ast::node_pointer parser::bit_or_expression()
+    {
+        auto left = bit_xor_expression();
+
+        if (current_ == '|')
+        {
+            current_ = lexer_.next();
+            return std::make_unique<ast::binary>('|', std::move(left), std::move(bit_or_expression()));
+        }
+
+        return left;
+    }
+
+    ast::node_pointer parser::bit_xor_expression()
+    {
+        auto left = bit_shift_expression();
+
+        if (current_ == '^')
+        {
+            current_ = lexer_.next();
+            return std::make_unique<ast::binary>('^', std::move(left), std::move(bit_xor_expression()));
+        }
+
+        return left;
+    }
+
+    ast::node_pointer parser::bit_shift_expression()
+    {
+        auto left = prefix_expression();
+
+        if (current_ == token::t_left_shift)
+        {
+            current_ = lexer_.next();
+            return std::make_unique<ast::binary>(token::t_left_shift, std::move(left), std::move(prefix_expression()));
+        }
+        else if (current_ == token::t_right_shift)
+        {
+            current_ = lexer_.next();
+            return std::make_unique<ast::binary>(token::t_right_shift, std::move(left), std::move(prefix_expression()));
+        }
+        else
+        {
+            return left;
+        }
+    }
+
+    ast::node_pointer parser::prefix_expression()
+    {
+        return select_expression();
+    }
+
+    ast::node_pointer parser::select_expression()
+    {
+        return suffix_expression();
+    }
+
+    ast::node_pointer parser::suffix_expression()
+    {
+        return primary_expression();
     }
 
     ast::node_pointer parser::primary_expression()

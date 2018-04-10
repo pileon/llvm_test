@@ -107,6 +107,7 @@ namespace
                hoo = "Hello"
                a = foo * bar - 123
                b = 1 = 2 and 2 != 3 or not foo
+               c = 1 << 4 & 15 | 32
             )");
 
         lexer::lexer l(input, "<stdin>");
