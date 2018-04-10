@@ -112,7 +112,7 @@ namespace
 
         if (auto root = p.parse(); root != nullptr)
         {
-            root->accept(ast::print_visitor(std::cout));
+            std::cout << root;
         }
     }
 }

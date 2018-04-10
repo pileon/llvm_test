@@ -214,7 +214,18 @@ namespace ast
 
         void visit(function const& f) override
         {
-            output_ << indent(indent_) << "function() {\n";
+            output_ << indent(indent_) << "function(";
+
+            for (auto arg = begin(f.arguments); arg != end(f.arguments); ++arg)
+            {
+                (*arg)->accept(this);
+                if (arg + 1 != end(f.arguments))
+                {
+                    output_ << ", ";
+                }
+            }
+            output_ << ") {\n";
+
             indent_ += 4;
             for (auto const& statement : f.statements)
             {
