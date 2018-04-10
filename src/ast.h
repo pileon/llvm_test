@@ -188,14 +188,7 @@ namespace ast
             std::uint32_t indent_;
         };
 
-        friend std::ostream& operator<<(std::ostream& os, indent const& ind)
-        {
-            for (std::uint32_t i = 0; i < ind.indent_; ++i)
-            {
-                os << ' ';
-            }
-            return os;
-        }
+        friend std::ostream& operator<<(std::ostream& os, indent const& ind);
 
     public:
         print_visitor(std::ostream& os)
@@ -203,60 +196,13 @@ namespace ast
         {
         }
 
-        void visit(assignment const& a) override
-        {
-            output_ << indent(indent_);
-            a.left->accept(*this);
-            output_<< " = ";
-            a.right->accept(*this);
-            output_ << '\n';
-        }
-
-        void visit(function const& f) override
-        {
-            output_ << indent(indent_) << "function(";
-
-            for (auto arg = begin(f.arguments); arg != end(f.arguments); ++arg)
-            {
-                (*arg)->accept(this);
-                if (arg + 1 != end(f.arguments))
-                {
-                    output_ << ", ";
-                }
-            }
-            output_ << ") {\n";
-
-            indent_ += 4;
-            for (auto const& statement : f.statements)
-            {
-                statement->accept(this);
-            }
-            indent_ -= 4;
-            output_ << std::setw(indent_) << "}\n";
-        }
-
-        void visit(identifier const& i) override
-        {
-            output_ << i.name;
-        }
-
-        void visit(number const& n) override
-        {
-            output_ << n.value;
-        }
-
-        void visit(string const& s) override
-        {
-            output_ << '\"' << s.str << '\"';
-        }
-
-        void visit(binary const&) override
-        {
-        }
-
-        void visit(call const&) override
-        {
-        }
+        void visit(assignment const& a) override;
+        void visit(function const& f) override;
+        void visit(identifier const& i) override;
+        void visit(number const& n) override;
+        void visit(string const& s) override;
+        void visit(binary const&) override;
+        void visit(call const&) override;
 
     private:
         std::ostream& output_;
