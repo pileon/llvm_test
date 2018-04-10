@@ -75,11 +75,32 @@ namespace ast
 
     void print_visitor::visit(binary const& b)
     {
-        //output_ << b.left << ' ' << print_visitor::op(b.op) << ' ' << b.right;
+        bool left_is_binary = dynamic_cast<binary*>(b.left.get()) != nullptr;
+        bool right_is_binary = dynamic_cast<binary*>(b.right.get()) != nullptr;
+
+        if (left_is_binary)
+        {
+            output_ << '(';
+        }
         output_ << b.left;
+        if (left_is_binary)
+        {
+            output_ << ')';
+        }
+
         output_ << ' ';
         output_ << op(b.op) << ' ';
+
+        if (right_is_binary)
+        {
+            output_ << '(';
+        }
         output_ << b.right;
+        if (right_is_binary)
+        {
+            output_ << ')';
+        }
+
         if (b.op == '[')
         {
             output_ << " ]";

@@ -115,6 +115,7 @@ namespace
                i = a[123 + 456]
                j = f(1, true, 34.32 * 1)
                k = if foo < 100 print("foo < 100") elif foo > 200 print("foo > 200") elif foo = 150 print("foo it exactly equal to 150") else print("foo is between 100 and 200")
+               l = 2 * (3 + 5)
             )");
 
         lexer::lexer l(input, "<stdin>");

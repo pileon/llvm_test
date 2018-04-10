@@ -417,6 +417,13 @@ namespace parser
         {
             node = std::make_unique<ast::special_value>(token::t_null);
         }
+        else if (current_ == '(')
+        {
+            current_ = lexer_.next();
+            node = source_expression();
+            match(')');
+            return node;
+        }
         else
         {
             expected("primary expression");
