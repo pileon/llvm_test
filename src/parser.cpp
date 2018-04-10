@@ -126,6 +126,7 @@ namespace parser
     {
         if (current_ == token::t_not)
         {
+            current_ = lexer_.next();
             return std::make_unique<ast::unary>(token::t_not, std::move(logic_not_expression()));
         }
         else

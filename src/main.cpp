@@ -106,6 +106,7 @@ namespace
                bar = foo
                hoo = "Hello"
                a = foo * bar - 123
+               b = 1 = 2 and 2 != 3 or not foo
             )");
 
         lexer::lexer l(input, "<stdin>");

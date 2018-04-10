@@ -226,6 +226,8 @@ namespace ast
     private:
         std::ostream& output_;
         std::uint32_t indent_;
+
+        static std::string op(int oper);
     };
 
     inline std::ostream& operator<<(std::ostream& os, node_pointer const& node)

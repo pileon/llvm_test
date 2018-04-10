@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include "ast.h"
+#include "token.h"
 
 namespace ast
 {
@@ -74,15 +75,50 @@ namespace ast
 
     void print_visitor::visit(binary const& b)
     {
-        output_ << b.left << ' ' << b.op << ' ' << b.right;
+        //output_ << b.left << ' ' << print_visitor::op(b.op) << ' ' << b.right;
+        output_ << b.left  << ' ' << op(b.op) << ' ';
+        output_ << b.right;
     }
 
     void print_visitor::visit(unary const& u)
     {
-        output_ << u.op << ' ' << u.expression;
+        output_ << op(u.op) << ' ' << u.expression;
     }
 
     void print_visitor::visit(call const&)
     {
+    }
+
+    std::string print_visitor::op(int oper)
+    {
+        if (oper >= 0)
+        {
+            return std::string(1, oper);
+        }
+        else
+        {
+            switch (oper)
+            {
+            case lexer::token::t_and:
+                return "and";
+            case lexer::token::t_or:
+                return "or";
+            case lexer::token::t_not:
+                return "not";
+            case lexer::token::t_not_equal:
+                return "!=";
+            case lexer::token::t_lt_equal:
+                return "<=";
+            case lexer::token::t_gt_equal:
+                return ">=";
+            case lexer::token::t_aprx_equal:
+                return "~=";
+            case lexer::token::t_aprx_not_equal:
+                return "~!=";
+
+            default:
+                return "<unknown>";
+            }
+        }
     }
 }
