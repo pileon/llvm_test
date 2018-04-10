@@ -15,6 +15,9 @@
 #include <iostream>
 #include <sstream>
 #include "lexer.h"
+#ifdef __unix__
+# include <unistd.h>
+#endif
 
 namespace
 {
@@ -27,7 +30,7 @@ namespace
             switch (c)
             {
             case '\a':
-                out += "\\n";
+                out += "\\a";
                 break;
             case '\b':
                 out += "\\b";
@@ -41,6 +44,9 @@ namespace
             case '\r':
                 out += "\\r";
                 break;
+            case '\t':
+                out += "\\t";
+                break;
             case '\v':
                 out += "\\v";
                 break;
@@ -53,12 +59,11 @@ namespace
 
         return out;
     }
-}
 
-int main()
-{
-    std::istringstream input(
-        R"(a boo
+    void lexer_test()
+    {
+        std::istringstream input(
+            R"(a boo
           foo bar
           12.34 + 1234
           hello = function(name) {
@@ -66,27 +71,41 @@ int main()
           }
           )");
 
-    lexer::lexer l(input, "<stdin>");
+        lexer::lexer l(input, "<stdin>");
 
-    while (true)
-    {
-        auto token = l.next();
+        while (true)
+        {
+            auto token = l.next();
 
-        std::cout << "Line " << token.line() << ": Got token " << token;
-        if (token == lexer::token::t_number)
-        {
-            std::cout << " (" << token.value().n << ')';
-        }
-        else if (token == lexer::token::t_identifier || token == lexer::token::t_string)
-        {
-            std::cout << " (" << unescape(token.value().s) << ')';
-        }
-        else if (token == lexer::token::t_eof || token == lexer::token::t_error)
-        {
-            break;
-        }
+            std::cout << "Line " << token.line() << ": Got token " << token;
+            if (token == lexer::token::t_number)
+            {
+                std::cout << " (" << token.value().n << ')';
+            }
+            else if (token == lexer::token::t_identifier || token == lexer::token::t_string)
+            {
+                std::cout << " (" << unescape(token.value().s) << ')';
+            }
+            else if (token == lexer::token::t_eof || token == lexer::token::t_error)
+            {
+                std::cout << '\n';
+                break;
+            }
 
-        std::cout << '\n';
+            std::cout << '\n';
+        }
     }
+}
+
+int main()
+{
+    lexer_test();
+
+    // This seems to be needed when running in Clion from inside WSL
+    std::cerr << std::flush;
+    std::clog << std::flush;
+    std::cout << std::endl << "Please press ENTER to continue..." << std::flush;
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
     return 0;
 }
