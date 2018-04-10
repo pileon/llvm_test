@@ -20,12 +20,27 @@ namespace lexer
     std::string token::to_string() const
     {
         static std::unordered_map<token_type, std::string> const token_to_string = {
-            { t_error       , "t_error" },
-            { t_eof         , "t_eof" },
-            { t_number      , "t_number" },
-            { t_identifier  , "t_identifier" },
-            { t_string      , "t_string" },
-            { t_function    , "t_function" }
+            { t_error           , "t_error"         },
+            { t_eof             , "t_eof"           },
+            { t_number          , "t_number"        },
+            { t_identifier      , "t_identifier"    },
+            { t_string          , "t_string"        },
+            { t_and             , "and"             },
+            { t_or              , "or"              },
+            { t_not             , "not"             },
+            { t_not_equal       , "!="              },
+            { t_lt_equal        , "<="              },
+            { t_gt_equal        , ">="              },
+            { t_aprx_equal      , "~="              },
+            { t_aprx_not_equal  , "~!="             },
+            { t_left_shift      , "<<"              },
+            { t_right_shift     , ">>"              },
+            { t_true            , "true"            },
+            { t_false           , "false"           },
+            { t_null            , "null"            },
+            { t_if              , "if"              },
+            { t_elif            , "elif"            },
+            { t_else            , "else"            },
         };
 
         if (auto const& i = token_to_string.find(token_); i != end(token_to_string))

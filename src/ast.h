@@ -34,6 +34,7 @@ namespace ast
     struct unary;
     struct call;
     struct special_value;
+    struct conditional;
 
     struct visitor_base
     {
@@ -46,6 +47,7 @@ namespace ast
         virtual void visit(unary const&) = 0;
         virtual void visit(call const&) = 0;
         virtual void visit(special_value const&) = 0;
+        virtual void visit(conditional const&) = 0;
     };
 
     struct ast_base
@@ -210,6 +212,24 @@ namespace ast
         }
     };
 
+    struct conditional : ast_base
+    {
+        conditional(node_pointer condition, node_pointer expression, std::vector<node_pointer> elifs, node_pointer els)
+            : condition_(std::move(condition)), expression_(std::move(expression)), elifs_(std::move(elifs)), els_(std::move(els))
+        {
+        }
+
+        node_pointer condition_;
+        node_pointer expression_;
+        std::vector<node_pointer> elifs_;
+        node_pointer els_;
+
+        void accept(visitor_base* visitor) override
+        {
+            visitor->visit(*this);
+        }
+    };
+
     class print_visitor : public visitor_base
     {
     private:
@@ -240,6 +260,7 @@ namespace ast
         void visit(unary const&) override;
         void visit(call const&) override;
         void visit(special_value const&) override;
+        void visit(conditional const&) override;
 
     private:
         std::ostream& output_;

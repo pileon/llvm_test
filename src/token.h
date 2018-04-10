@@ -45,7 +45,10 @@ namespace lexer
             t_right_shift   = -16,
             t_true          = -17,
             t_false         = -18,
-            t_null          = -19
+            t_null          = -19,
+            t_if            = -20,
+            t_elif          = -21,
+            t_else          = -22
         };
 
         using value_type = std::any;

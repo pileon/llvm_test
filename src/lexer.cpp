@@ -167,7 +167,10 @@ namespace lexer
             { "not"         , token::t_not          },
             { "true"        , token::t_true         },
             { "false"       , token::t_false        },
-            { "null"        , token::t_null         }
+            { "null"        , token::t_null         },
+            { "if"          , token::t_if           },
+            { "elif"        , token::t_elif         },
+            { "else"        , token::t_else         },
         };
 
         if (auto const it = keywords.find(word); it != end(keywords))

@@ -37,15 +37,15 @@ namespace parser
         return std::move(top_);
     }
 
-    lexer::token parser::match(char ch)
+    lexer::token parser::match(int token)
     {
-        if (current_ == ch)
+        if (current_ == token)
         {
             return current_ = lexer_.next();
         }
         else
         {
-            expected(ch);
+            expected(token);
         }
     }
 
@@ -80,19 +80,6 @@ namespace parser
         return conditional_expression();
     }
 
-    ast::node_pointer parser::identifier()
-    {
-        if (current_ == token::t_identifier)
-        {
-            ast::node_pointer id = std::make_unique<ast::identifier>(current_.value<std::string>());
-            current_ = lexer_.next();
-            return id;
-        }
-        expected(token::t_identifier);
-
-        return nullptr;
-    }
-
     ast::node_pointer parser::source_expression()
     {
         return conditional_expression();
@@ -105,7 +92,30 @@ namespace parser
 
     ast::node_pointer parser::conditional_expression()
     {
-        return logic_and_expression();
+        if (current_ == token::t_if)
+        {
+            current_ = lexer_.next();
+
+            auto condition = logic_and_expression();
+            auto expr = source_expression();
+
+            std::vector<ast::node_pointer> elifs;
+            while (current_ == token::t_elif)
+            {
+                current_ = lexer_.next();
+                auto left = logic_and_expression();
+                auto right = source_expression();
+                elifs.push_back(std::make_unique<ast::binary>(token::t_elif, std::move(left), std::move(right)));
+            }
+
+            match(token::t_else);
+
+            return std::make_unique<ast::conditional>(std::move(condition), std::move(expr), std::move(elifs), std::move(source_expression()));
+        }
+        else
+        {
+            return logic_and_expression();
+        }
     }
 
     ast::node_pointer parser::logic_and_expression()
@@ -364,6 +374,8 @@ namespace parser
                 current_ = lexer_.next();
                 arguments.push_back(source_expression());
             } while (current_ == ',');
+
+            match(')');
 
             return std::make_unique<ast::call>(std::move(left), std::move(arguments));
         }

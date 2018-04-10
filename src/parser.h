@@ -37,10 +37,9 @@ namespace parser
         std::unique_ptr<ast::function> top_;    // Top-level function
         lexer::token current_;                  // Current token
 
-        lexer::token match(char ch);
+        lexer::token match(int token);
 
         ast::node_pointer statement();
-        ast::node_pointer identifier();
         ast::node_pointer source_expression();
         ast::node_pointer destination_expression();
         ast::node_pointer conditional_expression();

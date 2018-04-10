@@ -125,6 +125,33 @@ namespace ast
         }
     }
 
+    void print_visitor::visit(conditional const& c)
+    {
+        output_ << "if " << c.condition_;
+        if (!c.elifs_.empty())
+        {
+            output_ << '\n';
+            indent_ += 4;
+
+            output_ << indent(indent_ + 4) << c.expression_ << '\n';
+
+            for (auto const& elif_iter : c.elifs_)
+            {
+                auto const& elif = dynamic_cast<ast::binary const&>(*elif_iter);
+                output_ << indent(indent_) << "elif ";
+                output_ << elif.left;
+                output_ << '\n';
+                output_ << indent(indent_ + 4) << elif.right << '\n';
+            }
+            output_ << indent(indent_) << "else\n" << indent(indent_ + 4) << c.els_;
+            indent_ -= 4;
+        }
+        else
+        {
+            output_ << " else " << c.els_;
+        }
+    }
+
     std::string print_visitor::op(int oper)
     {
         if (oper >= 0)
