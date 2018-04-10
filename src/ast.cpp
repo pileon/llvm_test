@@ -76,13 +76,15 @@ namespace ast
     void print_visitor::visit(binary const& b)
     {
         //output_ << b.left << ' ' << print_visitor::op(b.op) << ' ' << b.right;
-        output_ << b.left  << ' ' << op(b.op) << ' ';
+        output_ << b.left;
+        output_ << ' ';
+        output_ << op(b.op) << ' ';
         output_ << b.right;
     }
 
     void print_visitor::visit(unary const& u)
     {
-        output_ << op(u.op) << ' ' << u.expression;
+        output_ << op(u.op) << u.expression;
     }
 
     void print_visitor::visit(call const&)

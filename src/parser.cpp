@@ -301,7 +301,30 @@ namespace parser
 
     ast::node_pointer parser::prefix_expression()
     {
-        return select_expression();
+        if (current_ == '+')
+        {
+            current_ = lexer_.next();
+            return select_expression();
+        }
+        else if (current_ == '-')
+        {
+            current_ = lexer_.next();
+            return std::make_unique<ast::unary>('-', std::move(select_expression()));
+        }
+        else if (current_ == '~')
+        {
+            current_ = lexer_.next();
+            return std::make_unique<ast::unary>('~', std::move(prefix_expression()));
+        }
+        else if (current_ == '|')
+        {
+            current_ = lexer_.next();
+            return std::make_unique<ast::unary>('|', std::move(prefix_expression()));
+        }
+        else
+        {
+            return select_expression();
+        }
     }
 
     ast::node_pointer parser::select_expression()
