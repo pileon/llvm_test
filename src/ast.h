@@ -20,12 +20,42 @@
 #include <memory>
 #include <vector>
 #include <ostream>
+#include <iomanip>
 
 namespace ast
 {
+    struct assignment;
+    struct function;
+    struct identifier;
+    struct number;
+    struct string;
+    struct binary;
+    struct call;
+
+    struct visitor_base
+    {
+        virtual void visit(assignment const&) = 0;
+        virtual void visit(function const&) = 0;
+        virtual void visit(identifier const&) = 0;
+        virtual void visit(number const&) = 0;
+        virtual void visit(string const&) = 0;
+        virtual void visit(binary const&) = 0;
+        virtual void visit(call const&) = 0;
+    };
+
     struct ast_base
     {
         virtual ~ast_base() = default;
+
+        virtual void accept(visitor_base*) = 0;
+        void accept(visitor_base&& visitor)
+        {
+            accept(&visitor);
+        }
+        void accept(visitor_base& visitor)
+        {
+            accept(&visitor);
+        }
 
         virtual std::ostream& output(std::ostream& os)
         {
@@ -54,6 +84,11 @@ namespace ast
         {
             return os << "assignment(\n\t" << left << "\n\t" << right << ')';
         }
+
+        void accept(visitor_base* visitor) override
+        {
+            visitor->visit(*this);
+        }
     };
 
     struct number : ast_base
@@ -68,6 +103,11 @@ namespace ast
         std::ostream& output(std::ostream& os) override
         {
             return os << "number(" << value << ')';
+        }
+
+        void accept(visitor_base* visitor) override
+        {
+            visitor->visit(*this);
         }
     };
 
@@ -84,6 +124,11 @@ namespace ast
         {
             return os << "identifier(" << name << ')';
         }
+
+        void accept(visitor_base* visitor) override
+        {
+            visitor->visit(*this);
+        }
     };
 
     struct string : ast_base
@@ -97,7 +142,12 @@ namespace ast
 
         std::ostream& output(std::ostream& os) override
         {
-            return os << "identifier(\"" << str << "\")";
+            return os << "string(\"" << str << "\")";
+        }
+
+        void accept(visitor_base* visitor) override
+        {
+            visitor->visit(*this);
         }
     };
 
@@ -133,6 +183,11 @@ namespace ast
 
             return os << ')';
         }
+
+        void accept(visitor_base* visitor) override
+        {
+            visitor->visit(*this);
+        }
     };
 
     struct binary : ast_base
@@ -145,6 +200,11 @@ namespace ast
         char op;
         node_pointer left;
         node_pointer right;
+
+        void accept(visitor_base* visitor) override
+        {
+            visitor->visit(*this);
+        }
     };
 
     struct call : ast_base
@@ -156,6 +216,88 @@ namespace ast
 
         std::string name;   // Function name
         std::vector<node_pointer> arguments;   // Argument list
+
+        void accept(visitor_base* visitor) override
+        {
+            visitor->visit(*this);
+        }
+    };
+
+    class print_visitor : public visitor_base
+    {
+    private:
+        struct indent
+        {
+            explicit indent(std::uint32_t indentation)
+                : indent_(indentation)
+            {
+            }
+
+            std::uint32_t indent_;
+        };
+
+        friend std::ostream& operator<<(std::ostream& os, indent const& ind)
+        {
+            for (std::uint32_t i = 0; i < ind.indent_; ++i)
+            {
+                os << ' ';
+            }
+            return os;
+        }
+
+    public:
+        print_visitor(std::ostream& os)
+            : output_(os), indent_(0)
+        {
+        }
+
+        void visit(assignment const& a) override
+        {
+            output_ << indent(indent_);
+            a.left->accept(*this);
+            output_<< " = ";
+            a.right->accept(*this);
+            output_ << '\n';
+        }
+
+        void visit(function const& f) override
+        {
+            output_ << indent(indent_) << "function() {\n";
+            indent_ += 4;
+            for (auto const& statement : f.statements)
+            {
+                statement->accept(this);
+            }
+            indent_ -= 4;
+            output_ << std::setw(indent_) << "}\n";
+        }
+
+        void visit(identifier const& i) override
+        {
+            output_ << i.name;
+        }
+
+        void visit(number const& n) override
+        {
+            output_ << n.value;
+        }
+
+        void visit(string const& s) override
+        {
+            output_ << '\"' << s.str << '\"';
+        }
+
+        void visit(binary const&) override
+        {
+        }
+
+        void visit(call const&) override
+        {
+        }
+
+    private:
+        std::ostream& output_;
+        std::uint32_t indent_;
     };
 }
 
