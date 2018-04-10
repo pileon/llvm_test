@@ -36,8 +36,11 @@ namespace lexer
             t_and           = -7,
             t_or            = -8,
             t_not           = -9,
-            // TODO: The keywords and operators
-
+            t_not_equal     = -10,
+            t_lt_equal      = -11,
+            t_gt_equal      = -12,
+            t_aprx_equal    = -13,
+            t_aprx_not_equal= -14,
         };
 
         using value_type = std::any;

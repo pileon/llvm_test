@@ -136,7 +136,52 @@ namespace parser
 
     ast::node_pointer parser::comparison_expression()
     {
-        return add_sub_expression();
+        auto left = add_sub_expression();
+
+        if (current_ == '=')
+        {
+            current_ = lexer_.next();
+            return std::make_unique<ast::binary>('=', std::move(left), std::move(add_sub_expression()));
+        }
+        else if (current_ == '<')
+        {
+            current_ = lexer_.next();
+            return std::make_unique<ast::binary>('<', std::move(left), std::move(add_sub_expression()));
+        }
+        else if (current_ == '>')
+        {
+            current_ = lexer_.next();
+            return std::make_unique<ast::binary>('>', std::move(left), std::move(add_sub_expression()));
+        }
+        else if (current_ == token::t_not_equal)
+        {
+            current_ = lexer_.next();
+            return std::make_unique<ast::binary>('>', std::move(left), std::move(add_sub_expression()));
+        }
+        else if (current_ == token::t_lt_equal)
+        {
+            current_ = lexer_.next();
+            return std::make_unique<ast::binary>(token::t_lt_equal, std::move(left), std::move(add_sub_expression()));
+        }
+        else if (current_ == token::t_gt_equal)
+        {
+            current_ = lexer_.next();
+            return std::make_unique<ast::binary>(token::t_gt_equal, std::move(left), std::move(add_sub_expression()));
+        }
+        else if (current_ == token::t_aprx_equal)
+        {
+            current_ = lexer_.next();
+            return std::make_unique<ast::binary>(token::t_aprx_equal, std::move(left), std::move(add_sub_expression()));
+        }
+        else if (current_ == token::t_aprx_not_equal)
+        {
+            current_ = lexer_.next();
+            return std::make_unique<ast::binary>(token::t_aprx_not_equal, std::move(left), std::move(add_sub_expression()));
+        }
+        else
+        {
+            return left;
+        }
     }
 
     ast::node_pointer parser::add_sub_expression()
