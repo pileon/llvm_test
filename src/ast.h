@@ -21,6 +21,7 @@
 #include <vector>
 #include <ostream>
 #include <iomanip>
+#include <iostream>
 
 namespace ast
 {
@@ -56,19 +57,9 @@ namespace ast
         {
             accept(&visitor);
         }
-
-        virtual std::ostream& output(std::ostream& os)
-        {
-            return os;
-        }
     };
 
     using node_pointer = std::unique_ptr<ast_base>;
-
-    inline std::ostream& operator<<(std::ostream& os, node_pointer const& node)
-    {
-        return node->output(os);
-    }
 
     struct assignment : ast_base
     {
@@ -79,11 +70,6 @@ namespace ast
 
         node_pointer left;
         node_pointer right;
-
-        std::ostream& output(std::ostream& os) override
-        {
-            return os << "assignment(\n\t" << left << "\n\t" << right << ')';
-        }
 
         void accept(visitor_base* visitor) override
         {
@@ -100,11 +86,6 @@ namespace ast
 
         double value;
 
-        std::ostream& output(std::ostream& os) override
-        {
-            return os << "number(" << value << ')';
-        }
-
         void accept(visitor_base* visitor) override
         {
             visitor->visit(*this);
@@ -120,11 +101,6 @@ namespace ast
 
         std::string name;
 
-        std::ostream& output(std::ostream& os) override
-        {
-            return os << "identifier(" << name << ')';
-        }
-
         void accept(visitor_base* visitor) override
         {
             visitor->visit(*this);
@@ -139,11 +115,6 @@ namespace ast
         }
 
         std::string str;
-
-        std::ostream& output(std::ostream& os) override
-        {
-            return os << "string(\"" << str << "\")";
-        }
 
         void accept(visitor_base* visitor) override
         {
@@ -164,25 +135,6 @@ namespace ast
 
         std::vector<node_pointer> arguments;
         std::vector<node_pointer> statements;
-
-        std::ostream& output(std::ostream& os) override
-        {
-            os << "function(\n\t";
-            if (!arguments.empty())
-            {
-                // TODO: Implement
-            }
-
-            if (!statements.empty())
-            {
-                for (auto const& s : statements)
-                {
-                    os << s << '\n';
-                }
-            }
-
-            return os << ')';
-        }
 
         void accept(visitor_base* visitor) override
         {
@@ -299,6 +251,11 @@ namespace ast
         std::ostream& output_;
         std::uint32_t indent_;
     };
+
+    inline std::ostream& operator<<(std::ostream& os, node_pointer const& node)
+    {
+        node->accept(ast::print_visitor(std::cout));
+    }
 }
 
 #endif //LLVM_TEST_AST_H
