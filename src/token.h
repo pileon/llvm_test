@@ -42,7 +42,10 @@ namespace lexer
             t_aprx_equal    = -13,
             t_aprx_not_equal= -14,
             t_left_shift    = -15,
-            t_right_shift   = -16
+            t_right_shift   = -16,
+            t_true          = -17,
+            t_false         = -18,
+            t_null          = -19
         };
 
         using value_type = std::any;

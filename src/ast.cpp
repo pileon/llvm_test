@@ -91,6 +91,26 @@ namespace ast
     {
     }
 
+    void print_visitor::visit(special_value const& v)
+    {
+        if (v.op == lexer::token::t_true)
+        {
+            output_ << "true";
+        }
+        else if (v.op == lexer::token::t_false)
+        {
+            output_ << "false";
+        }
+        else if (v.op == lexer::token::t_null)
+        {
+            output_ << "null";
+        }
+        else
+        {
+            output_ << "<unknown value>";
+        }
+    }
+
     std::string print_visitor::op(int oper)
     {
         if (oper >= 0)

@@ -33,6 +33,7 @@ namespace ast
     struct binary;
     struct unary;
     struct call;
+    struct special_value;
 
     struct visitor_base
     {
@@ -44,6 +45,7 @@ namespace ast
         virtual void visit(binary const&) = 0;
         virtual void visit(unary const&) = 0;
         virtual void visit(call const&) = 0;
+        virtual void visit(special_value const&) = 0;
     };
 
     struct ast_base
@@ -177,6 +179,21 @@ namespace ast
         }
     };
 
+    struct special_value : ast_base
+    {
+        special_value(int op)
+            : op(op)
+        {
+        }
+
+        int op;
+
+        void accept(visitor_base* visitor) override
+        {
+            visitor->visit(*this);
+        }
+    };
+
     struct call : ast_base
     {
         call(std::string name, std::vector<node_pointer> args)
@@ -222,6 +239,7 @@ namespace ast
         void visit(binary const&) override;
         void visit(unary const&) override;
         void visit(call const&) override;
+        void visit(special_value const&) override;
 
     private:
         std::ostream& output_;

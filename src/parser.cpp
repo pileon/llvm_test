@@ -352,6 +352,18 @@ namespace parser
         {
             node = std::make_unique<ast::identifier>(current_.value<std::string>());
         }
+        else if (current_ == token::t_true)
+        {
+            node = std::make_unique<ast::special_value>(token::t_true);
+        }
+        else if (current_ == token::t_false)
+        {
+            node = std::make_unique<ast::special_value>(token::t_false);
+        }
+        else if (current_ == token::t_null)
+        {
+            node = std::make_unique<ast::special_value>(token::t_null);
+        }
         else
         {
             expected("primary expression");

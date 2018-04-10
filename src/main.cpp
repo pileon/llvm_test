@@ -109,6 +109,8 @@ namespace
                b = 1 = 2 and 2 != 3 or not foo
                c = 1 << 4 & 15 | 32
                d = |-1 + +5 - -5 & ~2
+               e = true or false
+               f = null
             )");
 
         lexer::lexer l(input, "<stdin>");

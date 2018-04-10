@@ -164,7 +164,10 @@ namespace lexer
             { "function"    , token::t_function     },
             { "and"         , token::t_and          },
             { "or"          , token::t_or           },
-            { "not"         , token::t_not          }
+            { "not"         , token::t_not          },
+            { "true"        , token::t_true         },
+            { "false"       , token::t_false        },
+            { "null"        , token::t_null         }
         };
 
         if (auto const it = keywords.find(word); it != end(keywords))
@@ -217,6 +220,9 @@ namespace lexer
                     break;
                 case 'r':
                     ch = '\r';
+                    break;
+                case 't':
+                    ch = '\t';
                     break;
                 case 'v':
                     ch = '\v';
