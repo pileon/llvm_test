@@ -66,11 +66,16 @@ namespace parser
 
     ast::node_pointer parser::statement()
     {
-        auto left = identifier();
-        match('=');
-        auto right = source_expression();
+        if (current_ == token::t_identifier)
+        {
+            auto left = destination_expression();
+            match('=');
+            auto right = source_expression();
 
-        return std::make_unique<ast::assignment>(std::move(left), std::move(right));
+            return std::make_unique<ast::assignment>(std::move(left), std::move(right));
+        }
+
+        return conditional_expression();
     }
 
     ast::node_pointer parser::identifier()
@@ -89,6 +94,11 @@ namespace parser
     ast::node_pointer parser::source_expression()
     {
         return conditional_expression();
+    }
+
+    ast::node_pointer parser::destination_expression()
+    {
+        return select_expression();
     }
 
     ast::node_pointer parser::conditional_expression()
@@ -329,7 +339,15 @@ namespace parser
 
     ast::node_pointer parser::select_expression()
     {
-        return suffix_expression();
+        auto left = suffix_expression();
+
+        if (current_ == '.')
+        {
+            current_ = lexer_.next();
+            return std::make_unique<ast::binary>('.', std::move(left), std::move(select_expression()));
+        }
+
+        return left;
     }
 
     ast::node_pointer parser::suffix_expression()

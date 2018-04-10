@@ -111,6 +111,7 @@ namespace
                d = |-1 + +5 - -5 & ~2
                e = true or false
                f = null
+               g.h = y.z
             )");
 
         lexer::lexer l(input, "<stdin>");

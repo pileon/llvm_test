@@ -42,6 +42,7 @@ namespace parser
         ast::node_pointer statement();
         ast::node_pointer identifier();
         ast::node_pointer source_expression();
+        ast::node_pointer destination_expression();
         ast::node_pointer conditional_expression();
         ast::node_pointer logic_and_expression();
         ast::node_pointer logic_or_expression();
