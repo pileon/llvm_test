@@ -72,8 +72,9 @@ namespace ast
         output_ << '\"' << s.str << '\"';
     }
 
-    void print_visitor::visit(binary const&)
+    void print_visitor::visit(binary const& b)
     {
+        output_ << b.left << ' ' << b.op << ' ' << b.right;
     }
 
     void print_visitor::visit(call const&)

@@ -37,53 +37,6 @@ namespace parser
         return std::move(top_);
     }
 
-    ast::node_pointer parser::statement()
-    {
-        auto left = identifier();
-        match('=');
-        auto right = expression();
-
-        return std::make_unique<ast::assignment>(std::move(left), std::move(right));
-    }
-
-    ast::node_pointer parser::identifier()
-    {
-        if (current_ == token::t_identifier)
-        {
-            auto id = std::make_unique<ast::identifier>(current_.value<std::string>());
-            current_ = lexer_.next();
-            return std::move(id);
-        }
-        expected(token::t_identifier);
-
-        return nullptr;
-    }
-
-    ast::node_pointer parser::expression()
-    {
-        ast::node_pointer node;
-
-        if (current_ == token::t_number)
-        {
-            node = std::make_unique<ast::number>(current_.value<double>());
-        }
-        else if (current_ == token::t_string)
-        {
-            node = std::make_unique<ast::string>(current_.value<std::string>());
-        }
-        else if (current_ == token::t_identifier)
-        {
-            node = std::make_unique<ast::identifier>(current_.value<std::string>());
-        }
-        else
-        {
-            expected("expression");
-        }
-        current_ = lexer_.next();
-
-        return std::move(node);
-    }
-
     lexer::token parser::match(char ch)
     {
         if (current_ == ch)
@@ -109,5 +62,117 @@ namespace parser
     void parser::expected(std::string const& exp, token actual)
     {
         std::cout << current_.file() << ':' << current_.line() << " :: Syntax error: Expected " << exp << ", got " << actual << '\n';
+    }
+
+    ast::node_pointer parser::statement()
+    {
+        auto left = identifier();
+        match('=');
+        auto right = expression();
+
+        return std::make_unique<ast::assignment>(std::move(left), std::move(right));
+    }
+
+    ast::node_pointer parser::identifier()
+    {
+        if (current_ == token::t_identifier)
+        {
+            ast::node_pointer id = std::make_unique<ast::identifier>(current_.value<std::string>());
+            current_ = lexer_.next();
+            return id;
+        }
+        expected(token::t_identifier);
+
+        return nullptr;
+    }
+
+    ast::node_pointer parser::expression()
+    {
+        return add_sub_expression();
+    }
+
+    ast::node_pointer parser::add_sub_expression()
+    {
+        auto left = mul_div_expression();
+
+        while (true)
+        {
+            if (current_ == '+')
+            {
+                current_ = lexer_.next();
+                return std::make_unique<ast::binary>('+', std::move(left), std::move(add_sub_expression()));
+            }
+            else if (current_ == '-')
+            {
+                current_ = lexer_.next();
+                return std::make_unique<ast::binary>('-', std::move(left), std::move(add_sub_expression()));
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        return left;
+    }
+
+    ast::node_pointer parser::mul_div_expression()
+    {
+        auto left = primary_expression();
+
+        while (true)
+        {
+            if (current_ == '*')
+            {
+                current_ = lexer_.next();
+                return std::make_unique<ast::binary>('*', std::move(left), std::move(mul_div_expression()));
+            }
+            else if (current_ == '/')
+            {
+                current_ = lexer_.next();
+                return std::make_unique<ast::binary>('/', std::move(left), std::move(mul_div_expression()));
+            }
+            else if (current_ == '%')
+            {
+                current_ = lexer_.next();
+                return std::make_unique<ast::binary>('%', std::move(left), std::move(mul_div_expression()));
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        return left;
+    }
+
+    ast::node_pointer parser::primary_expression()
+    {
+        ast::node_pointer node;
+        if (current_ == token::t_number)
+        {
+            node = std::make_unique<ast::number>(current_.value<double>());
+        }
+        else if (current_ == token::t_string)
+        {
+            node = std::make_unique<ast::string>(current_.value<std::string>());
+        }
+        else if (current_ == token::t_identifier)
+        {
+            node = std::make_unique<ast::identifier>(current_.value<std::string>());
+        }
+        else
+        {
+            expected("primary expression");
+        }
+
+        current_ = lexer_.next();
+
+        return node;
+    }
+
+    ast::node_pointer parser::literal_expression()
+    {
+        return ast::node_pointer();
     }
 }

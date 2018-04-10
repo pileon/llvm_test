@@ -105,6 +105,7 @@ namespace
             R"(foo = 123
                bar = foo
                hoo = "Hello"
+               a = foo + bar - 123
             )");
 
         lexer::lexer l(input, "<stdin>");
