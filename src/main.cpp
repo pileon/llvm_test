@@ -112,6 +112,8 @@ namespace
                e = true or false
                f = null
                g.h = y.z
+               i = a[123 + 456]
+               j = f(1, true, 34.32 * 1)
             )");
 
         lexer::lexer l(input, "<stdin>");

@@ -75,6 +75,8 @@ namespace parser
             return std::make_unique<ast::assignment>(std::move(left), std::move(right));
         }
 
+        // TODO: Other statements
+
         return conditional_expression();
     }
 
@@ -352,7 +354,28 @@ namespace parser
 
     ast::node_pointer parser::suffix_expression()
     {
-        return primary_expression();
+        auto left = primary_expression();
+
+        if (current_ == '(')
+        {
+            std::vector<ast::node_pointer> arguments;
+            do
+            {
+                current_ = lexer_.next();
+                arguments.push_back(source_expression());
+            } while (current_ == ',');
+
+            return std::make_unique<ast::call>(std::move(left), std::move(arguments));
+        }
+        else if (current_ == '[')
+        {
+            current_ = lexer_.next();
+            return std::make_unique<ast::binary>('[', std::move(left), std::move(source_expression()));
+        }
+        else
+        {
+            return left;
+        }
     }
 
     ast::node_pointer parser::primary_expression()

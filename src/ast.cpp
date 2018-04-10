@@ -80,6 +80,10 @@ namespace ast
         output_ << ' ';
         output_ << op(b.op) << ' ';
         output_ << b.right;
+        if (b.op == '[')
+        {
+            output_ << " ]";
+        }
     }
 
     void print_visitor::visit(unary const& u)
@@ -87,8 +91,18 @@ namespace ast
         output_ << op(u.op) << u.expression;
     }
 
-    void print_visitor::visit(call const&)
+    void print_visitor::visit(call const& c)
     {
+        output_ << c.name << '(';
+        for (auto arg = begin(c.arguments); arg != end(c.arguments); ++arg)
+        {
+            output_ << *arg;
+            if (arg + 1 != end(c.arguments))
+            {
+                output_ << ", ";
+            }
+        }
+        output_ << ')';
     }
 
     void print_visitor::visit(special_value const& v)

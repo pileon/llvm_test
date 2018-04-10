@@ -196,12 +196,12 @@ namespace ast
 
     struct call : ast_base
     {
-        call(std::string name, std::vector<node_pointer> args)
+        call(node_pointer name, std::vector<node_pointer> args)
             : name(std::move(name)), arguments(std::move(args))
         {
         }
 
-        std::string name;   // Function name
+        node_pointer name;   // Function name
         std::vector<node_pointer> arguments;   // Argument list
 
         void accept(visitor_base* visitor) override
