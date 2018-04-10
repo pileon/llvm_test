@@ -77,6 +77,11 @@ namespace ast
         output_ << b.left << ' ' << b.op << ' ' << b.right;
     }
 
+    void print_visitor::visit(unary const& u)
+    {
+        output_ << u.op << ' ' << u.expression;
+    }
+
     void print_visitor::visit(call const&)
     {
     }

@@ -31,6 +31,7 @@ namespace ast
     struct number;
     struct string;
     struct binary;
+    struct unary;
     struct call;
 
     struct visitor_base
@@ -41,6 +42,7 @@ namespace ast
         virtual void visit(number const&) = 0;
         virtual void visit(string const&) = 0;
         virtual void visit(binary const&) = 0;
+        virtual void visit(unary const&) = 0;
         virtual void visit(call const&) = 0;
     };
 
@@ -144,14 +146,30 @@ namespace ast
 
     struct binary : ast_base
     {
-        binary(char op, node_pointer l, node_pointer r)
+        binary(int op, node_pointer l, node_pointer r)
             : op(op), left(std::move(l)), right(std::move(r))
         {
         }
 
-        char op;
+        int op;
         node_pointer left;
         node_pointer right;
+
+        void accept(visitor_base* visitor) override
+        {
+            visitor->visit(*this);
+        }
+    };
+
+    struct unary : ast_base
+    {
+        unary(int op, node_pointer e)
+            : op(op), expression(std::move(e))
+        {
+        }
+
+        int op;
+        node_pointer expression;
 
         void accept(visitor_base* visitor) override
         {
@@ -202,6 +220,7 @@ namespace ast
         void visit(number const& n) override;
         void visit(string const& s) override;
         void visit(binary const&) override;
+        void visit(unary const&) override;
         void visit(call const&) override;
 
     private:
