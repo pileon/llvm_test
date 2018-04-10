@@ -33,6 +33,9 @@ namespace lexer
             t_string        = -5,
 
             t_function      = -6,
+            t_and           = -7,
+            t_or            = -8,
+            t_not           = -9,
             // TODO: The keywords and operators
 
         };

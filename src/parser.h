@@ -41,11 +41,15 @@ namespace parser
 
         ast::node_pointer statement();
         ast::node_pointer identifier();
-        ast::node_pointer expression();
+        ast::node_pointer source_expression();
+        ast::node_pointer conditional_expression();
+        ast::node_pointer logic_and_expression();
+        ast::node_pointer logic_or_expression();
+        ast::node_pointer logic_not_expression();
+        ast::node_pointer comparison_expression();
         ast::node_pointer add_sub_expression();
         ast::node_pointer mul_div_expression();
         ast::node_pointer primary_expression();
-        ast::node_pointer literal_expression();
 
         void expected(char, lexer::token);
         void expected(lexer::token, lexer::token);

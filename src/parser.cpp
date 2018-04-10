@@ -68,7 +68,7 @@ namespace parser
     {
         auto left = identifier();
         match('=');
-        auto right = expression();
+        auto right = source_expression();
 
         return std::make_unique<ast::assignment>(std::move(left), std::move(right));
     }
@@ -86,7 +86,55 @@ namespace parser
         return nullptr;
     }
 
-    ast::node_pointer parser::expression()
+    ast::node_pointer parser::source_expression()
+    {
+        return conditional_expression();
+    }
+
+    ast::node_pointer parser::conditional_expression()
+    {
+        return logic_and_expression();
+    }
+
+    ast::node_pointer parser::logic_and_expression()
+    {
+        auto left = logic_or_expression();
+
+        while (current_ == token::t_and)
+        {
+            current_ = lexer_.next();
+            return std::make_unique<ast::binary>(token::t_and, std::move(left), std::move(logic_and_expression()));
+        }
+
+        return left;
+    }
+
+    ast::node_pointer parser::logic_or_expression()
+    {
+        auto left = logic_not_expression();
+
+        while (current_ == token::t_or)
+        {
+            current_ = lexer_.next();
+            return std::make_unique<ast::binary>(token::t_or, std::move(left), std::move(logic_or_expression()));
+        }
+
+        return left;
+    }
+
+    ast::node_pointer parser::logic_not_expression()
+    {
+        if (current_ == token::t_not)
+        {
+            return std::make_unique<ast::unary>(token::t_not, std::move(logic_not_expression()));
+        }
+        else
+        {
+            return comparison_expression();
+        }
+    }
+
+    ast::node_pointer parser::comparison_expression()
     {
         return add_sub_expression();
     }
@@ -169,10 +217,5 @@ namespace parser
         current_ = lexer_.next();
 
         return node;
-    }
-
-    ast::node_pointer parser::literal_expression()
-    {
-        return ast::node_pointer();
     }
 }
