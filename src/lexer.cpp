@@ -77,6 +77,62 @@ namespace lexer
             return token(token::t_string, line_, file_, get_string());
         }
 
+        // Handle multi-character operators
+        if (ch == '!')
+        {
+            int other = input_.get();
+            if (other == '=')
+            {
+                return token(token::t_not_equal, line_, file_);
+            }
+
+            input_.unget();
+        }
+
+        if (ch == '~')
+        {
+            int other = input_.get();
+            if (other == '=')
+            {
+                return token(token::t_aprx_equal, line_, file_);
+            }
+
+            if (other == '!')
+            {
+                other = input_.get();
+                if (other == '=')
+                {
+                    return token(token::t_aprx_not_equal, line_, file_);
+                }
+
+                input_.unget();
+            }
+
+            input_.unget();
+        }
+
+        if (ch == '<')
+        {
+            int other = input_.get();
+            if (other == '=')
+            {
+                return token(token::t_lt_equal, line_, file_);
+            }
+
+            input_.unget();
+        }
+
+        if (ch == '>')
+        {
+            int other = input_.get();
+            if (other == '=')
+            {
+                return token(token::t_gt_equal, line_, file_);
+            }
+
+            input_.unget();
+        }
+
         return token(input_.eof() ? token::t_eof : static_cast<token::token_type>(ch), line_, file_);
     }
 
@@ -95,7 +151,10 @@ namespace lexer
     token lexer::check_keyword(std::string word)
     {
         static std::unordered_map<std::string, token::token_type> const keywords = {
-            { "function", token::t_function }
+            { "function"    , token::t_function     },
+            { "and"         , token::t_and          },
+            { "or"          , token::t_or           },
+            { "not"         , token::t_not          }
         };
 
         if (auto const it = keywords.find(word); it != end(keywords))

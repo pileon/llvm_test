@@ -156,7 +156,7 @@ namespace parser
         else if (current_ == token::t_not_equal)
         {
             current_ = lexer_.next();
-            return std::make_unique<ast::binary>('>', std::move(left), std::move(add_sub_expression()));
+            return std::make_unique<ast::binary>(token::t_not_equal, std::move(left), std::move(add_sub_expression()));
         }
         else if (current_ == token::t_lt_equal)
         {
