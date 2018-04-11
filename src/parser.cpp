@@ -384,7 +384,9 @@ namespace parser
         else if (current_ == '[')
         {
             current_ = lexer_.next();
-            return std::make_unique<ast::binary>('[', std::move(left), std::move(source_expression()));
+            auto right = source_expression();
+            match(']');
+            return std::make_unique<ast::binary>('[', std::move(left), std::move(right));
         }
         else
         {
