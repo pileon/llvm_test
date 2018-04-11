@@ -37,7 +37,7 @@ namespace ast
 
     void print_visitor::visit(function const& f)
     {
-        output_ << indent(indent_) << "function(";
+        output_ << "function(";
 
         for (auto arg = begin(f.arguments); arg != end(f.arguments); ++arg)
         {
@@ -55,7 +55,7 @@ namespace ast
             statement->accept(this);
         }
         indent_ -= 4;
-        output_ << std::setw(indent_) << "}\n";
+        output_ << indent(indent_) << "}\n";
     }
 
     void print_visitor::visit(identifier const& i)

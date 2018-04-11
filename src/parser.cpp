@@ -37,15 +37,17 @@ namespace parser
         return std::move(top_);
     }
 
-    lexer::token parser::match(int token)
+    bool parser::match(int token)
     {
         if (current_ == token)
         {
-            return current_ = lexer_.next();
+            current_ = lexer_.next();
+            return true;
         }
         else
         {
             expected(token);
+            return false;
         }
     }
 
@@ -424,13 +426,56 @@ namespace parser
             match(')');
             return node;
         }
+        else if (current_ == token::t_function)
+        {
+            current_ = lexer_.next();
+            return function();
+        }
         else
         {
             expected("primary expression");
         }
 
+        // TODO: Literal lists, functions, classes etc.
+
         current_ = lexer_.next();
 
         return node;
+    }
+
+    ast::node_pointer parser::function()
+    {
+        auto fun = std::make_unique<ast::function>();
+        match('(');
+
+        std::vector<ast::node_pointer> arguments;
+        while (current_ == token::t_identifier)
+        {
+            arguments.push_back(std::make_unique<ast::identifier>(current_.value<std::string>()));
+            current_ = lexer_.next();
+
+            if (current_ == ')')
+            {
+                break;
+            }
+
+            match(',');
+        }
+
+        match(')');
+
+        match('{');
+
+        std::vector<ast::node_pointer> statements;
+        while (current_ != '}')
+        {
+            statements.push_back(std::move(statement()));
+        }
+
+        match('}');
+
+        fun->arguments  = std::move(arguments);
+        fun->statements = std::move(statements);
+        return std::move(fun);
     }
 }

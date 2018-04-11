@@ -37,7 +37,7 @@ namespace parser
         std::unique_ptr<ast::function> top_;    // Top-level function
         lexer::token current_;                  // Current token
 
-        lexer::token match(int token);
+        bool match(int token);
 
         ast::node_pointer statement();
         ast::node_pointer source_expression();
@@ -57,12 +57,13 @@ namespace parser
         ast::node_pointer select_expression();
         ast::node_pointer suffix_expression();
         ast::node_pointer primary_expression();
+        ast::node_pointer function();
 
         void expected(char, lexer::token);
         void expected(lexer::token, lexer::token);
         void expected(std::string const&, lexer::token);
 
-        void expected(char ch)
+        void expected(int ch)
         {
             expected(ch, current_);
         }
