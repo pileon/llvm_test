@@ -218,6 +218,9 @@ namespace lexer
                 case 'e':
                     ch = '\x1b';
                     break;
+                case 'f':
+                    ch = '\f';
+                    break;
                 case 'n':
                     ch = '\n';
                     break;
@@ -229,6 +232,11 @@ namespace lexer
                     break;
                 case 'v':
                     ch = '\v';
+                    break;
+
+                case '"':
+                case '\\':
+                    // Do nothing, ch is already correct
                     break;
 
                 default:

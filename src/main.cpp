@@ -41,6 +41,9 @@ namespace
             case '\x1b':
                 out += "\\e";
                 break;
+            case '\f':
+                out += "\\f";
+                break;
             case '\n':
                 out += "\\n";
                 break;
