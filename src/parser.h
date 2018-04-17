@@ -40,6 +40,8 @@ namespace parser
         bool match(int token);
 
         ast::node_pointer statement();
+        ast::node_pointer conditional_statement();
+        ast::node_pointer loop_statement();
         ast::node_pointer source_expression();
         ast::node_pointer destination_expression();
         ast::node_pointer conditional_expression();

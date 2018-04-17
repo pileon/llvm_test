@@ -71,10 +71,18 @@ namespace parser
         if (current_ == token::t_identifier)
         {
             auto left = destination_expression();
-            match('=');
-            auto right = source_expression();
 
-            return std::make_unique<ast::assignment>(std::move(left), std::move(right));
+            if (current_ == '=')
+            {
+                match('=');
+                auto right = source_expression();
+
+                return std::make_unique<ast::assignment>(std::move(left), std::move(right));
+            }
+            else
+            {
+                return std::move(left);
+            }
         }
 
         // TODO: Other statements
@@ -520,5 +528,15 @@ namespace parser
         }
 
         return std::move(cls);
+    }
+
+    ast::node_pointer parser::conditional_statement()
+    {
+        return ast::node_pointer();
+    }
+
+    ast::node_pointer parser::loop_statement()
+    {
+        return ast::node_pointer();
     }
 }
