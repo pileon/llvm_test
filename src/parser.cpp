@@ -85,6 +85,16 @@ namespace parser
             }
         }
 
+        if (current_ == token::t_for || current_ == token::t_while)
+        {
+            return loop_statement();
+        }
+
+        if (current_ == token::t_if)
+        {
+            return conditional_statement();
+        }
+
         // TODO: Other statements
 
         return conditional_expression();
@@ -532,10 +542,35 @@ namespace parser
 
     ast::node_pointer parser::conditional_statement()
     {
-        return ast::node_pointer();
+        if (current_ == token::t_if)
+        {
+            return if_statement();
+        }
     }
 
     ast::node_pointer parser::loop_statement()
+    {
+        if (current_ == token::t_while)
+        {
+            return while_statement();
+        }
+        if (current_ == token::t_for)
+        {
+            return for_statement();
+        }
+    }
+
+    ast::node_pointer parser::while_statement()
+    {
+        return ast::node_pointer();
+    }
+
+    ast::node_pointer parser::for_statement()
+    {
+        return ast::node_pointer();
+    }
+
+    ast::node_pointer parser::if_statement()
     {
         return ast::node_pointer();
     }
