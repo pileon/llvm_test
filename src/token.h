@@ -52,7 +52,10 @@ namespace lexer
             t_class         = -23,
             t_public        = -24,
             t_private       = -25,
-            t_final         = -26
+            t_final         = -26,
+            t_for           = -27,
+            t_while         = -28,
+            t_enum          = -29
         };
 
         using value_type = std::any;

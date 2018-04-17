@@ -172,6 +172,12 @@ namespace lexer
             { "elif"        , token::t_elif         },
             { "else"        , token::t_else         },
             { "class"       , token::t_class        },
+            { "public"      , token::t_public       },
+            { "private"     , token::t_private      },
+            { "final"       , token::t_final        },
+            { "for"         , token::t_for          },
+            { "while"       , token::t_while        },
+            { "enum"        , token::t_enum         },
         };
 
         if (auto const it = keywords.find(word); it != end(keywords))

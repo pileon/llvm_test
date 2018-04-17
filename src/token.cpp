@@ -45,6 +45,9 @@ namespace lexer
             { t_public          , "public"          },
             { t_private         , "private"         },
             { t_final           , "final"           },
+            { t_for             , "for"             },
+            { t_while           , "while"           },
+            { t_enum            , "enum"            },
         };
 
         if (auto const& i = token_to_string.find(token_); i != end(token_to_string))
