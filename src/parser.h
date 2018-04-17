@@ -38,6 +38,7 @@ namespace parser
         lexer::token current_;                  // Current token
 
         bool match(int token);
+        bool expect(int token);
 
         ast::node_pointer statement();
         ast::node_pointer source_expression();
