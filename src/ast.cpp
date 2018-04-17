@@ -237,4 +237,16 @@ namespace ast
         indent_ -= 4;
         output_ << indent(indent_) << "}";
     }
+
+    void print_visitor::visit(ast::while_statement const& w)
+    {
+        output_ << indent(indent_) << "while ";
+        w.condition_->accept(this);
+        output_ << '\n';
+        indent_ += 4;
+        output_ << indent(indent_);
+        w.statement_->accept(this);
+        indent_ -= 4;
+        output_ << '\n';
+    }
 }

@@ -562,7 +562,12 @@ namespace parser
 
     ast::node_pointer parser::while_statement()
     {
-        return ast::node_pointer();
+        match(token::t_while);
+
+        auto condition = source_expression();
+        auto stmt = statement();
+
+        return std::move(std::make_unique<ast::while_statement>(std::move(condition), std::move(stmt)));
     }
 
     ast::node_pointer parser::for_statement()

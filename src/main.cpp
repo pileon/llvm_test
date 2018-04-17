@@ -129,6 +129,10 @@ namespace
                        a = y
                    }
                }
+               o = function(i) {
+                   while i < 10
+                       print("i = ", i)
+               }
             )");
 
         lexer::lexer l(input, "<stdin>");
