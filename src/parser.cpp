@@ -51,6 +51,19 @@ namespace parser
         }
     }
 
+    bool parser::expect(int token)
+    {
+        if (current_ == token)
+        {
+            return true;
+        }
+        else
+        {
+            expected(token);
+            return false;
+        }
+    }
+
     void parser::expected(char ch, token tok)
     {
         std::cout << current_.file() << ':' << current_.line() << " :: Syntax error: Expected '" << ch << "', got " << tok << '\n';
@@ -448,8 +461,7 @@ namespace parser
         {
             current_ = lexer_.next();
             node = source_expression();
-            match(')');
-            return node;
+            expect(')');
         }
         else if (current_ == token::t_function)
         {
@@ -466,7 +478,7 @@ namespace parser
             expected("primary expression");
         }
 
-        // TODO: Literal lists, functions, classes etc.
+        // TODO: Literal lists, classes etc.
 
         current_ = lexer_.next();
 
