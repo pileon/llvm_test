@@ -28,11 +28,11 @@ namespace ast
 
     void print_visitor::visit(assignment const& a)
     {
-        output_ << indent(indent_);
+        //output_ << indent(indent_);
         a.left->accept(*this);
         output_ << " = ";
         a.right->accept(*this);
-        output_ << '\n';
+        //output_ << '\n';
     }
 
     void print_visitor::visit(function const& f)
@@ -50,9 +50,9 @@ namespace ast
         output_ << ") {\n";
 
         indent_ += 4;
-        for (auto const& statement : f.statements)
+        for (auto const& stmt : f.statements)
         {
-            statement->accept(this);
+            statement(stmt);
         }
         indent_ -= 4;
         output_ << indent(indent_) << "}";
@@ -109,7 +109,7 @@ namespace ast
 
     void print_visitor::visit(unary const& u)
     {
-        output_ << op(u.op) << u.expression;
+        output_ << op(u.op) << ' ' << u.expression;
     }
 
     void print_visitor::visit(call const& c)
@@ -164,7 +164,12 @@ namespace ast
                 output_ << '\n';
                 output_ << indent(indent_ + 4) << elif.right << '\n';
             }
-            output_ << indent(indent_) << "else\n" << indent(indent_ + 4) << c.els_;
+
+            if (c.els_)
+            {
+                output_ << indent(indent_) << "else\n" << indent(indent_ + 4) << c.els_;
+            }
+
             indent_ -= 4;
         }
         else
@@ -276,6 +281,13 @@ namespace ast
         if (dynamic_cast<ast::block_statement*>(stmt.get()))
         {
             stmt->accept(this);
+        }
+        else if (dynamic_cast<ast::conditional*>(stmt.get()))
+        {
+            output_ << '\n';
+            output_ << indent(indent_);
+            stmt->accept(this);
+            output_ << '\n';
         }
         else
         {

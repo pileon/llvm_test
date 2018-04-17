@@ -225,6 +225,10 @@ namespace ast
         {
         }
 
+        conditional()
+        {
+        }
+
         node_pointer condition_;
         node_pointer expression_;
         std::vector<node_pointer> elifs_;

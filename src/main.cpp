@@ -136,6 +136,12 @@ namespace
                    }
                    for n : a
                        print(n)
+                   if true
+                       print("Is true")
+                   elif not false {
+                       print("not")
+                       print("false")
+                   }
                }
             )");
 

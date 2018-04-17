@@ -577,9 +577,9 @@ namespace parser
 
     ast::node_pointer parser::for_statement()
     {
-        // TODO: There are multiple types of `for` statements
-        // TODO: For now we will let ordinary numeric iteration be delegated to the `while` loop
-        // TODO: and handle the `for ... in ...` type of loop here
+        // There are multiple types of `for` statements
+        // For now we will let ordinary numeric iteration be delegated to the `while` loop
+        // and handle the `for ... in ...` type of loop here
 
         match(token::t_for);
         auto iterator = source_expression();
@@ -592,7 +592,30 @@ namespace parser
 
     ast::node_pointer parser::if_statement()
     {
-        return ast::node_pointer();
+        match(token::t_if);
+
+        auto stmt = std::make_unique<ast::conditional>();
+
+        stmt->condition_ = std::move(source_expression());  // Yes, the condition can itself be a conditional expression, so `if if x a else b c else d` is valid
+        stmt->expression_ = std::move(statement());
+
+        std::vector<ast::node_pointer> elifs;
+        while (current_ == token::t_elif)
+        {
+            current_ = lexer_.next();
+            auto left = source_expression();
+            auto right = statement();
+            elifs.push_back(std::make_unique<ast::binary>(token::t_elif, std::move(left), std::move(right)));
+        }
+        stmt->elifs_ = std::move(elifs);
+
+        if (current_ == token::t_else)
+        {
+            current_ = lexer_.next();
+            stmt->els_ = std::move(statement());
+        }
+
+        return std::move(stmt);
     }
 
     ast::node_pointer parser::block_statement()
