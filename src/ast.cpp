@@ -243,19 +243,7 @@ namespace ast
         output_ << indent(indent_) << "while ";
         w.condition_->accept(this);
 
-        if (dynamic_cast<ast::block_statement*>(w.statement_.get()))
-        {
-            w.statement_->accept(this);
-        }
-        else
-        {
-            output_ << '\n';
-            indent_ += 4;
-            output_ << indent(indent_);
-            w.statement_->accept(this);
-            indent_ -= 4;
-            output_ << '\n';
-        }
+        statement(w.statement_);
     }
 
     void print_visitor::visit(ast::block_statement const& b)
@@ -269,5 +257,34 @@ namespace ast
             output_ << '\n';
         }
         indent_ -= 4;
+        output_ << indent(indent_) << "}\n";
+    }
+
+    void print_visitor::visit(for_in_statement const& f)
+    {
+        output_ << indent(indent_) << "for ";
+        f.iterator_->accept(this);
+        output_ << " : ";
+        f.source_->accept(this);
+
+        statement(f.statement_);
+
+    }
+
+    void print_visitor::statement(ast::node_pointer const& stmt)
+    {
+        if (dynamic_cast<ast::block_statement*>(stmt.get()))
+        {
+            stmt->accept(this);
+        }
+        else
+        {
+            output_ << '\n';
+            indent_ += 4;
+            output_ << indent(indent_);
+            stmt->accept(this);
+            indent_ -= 4;
+            output_ << '\n';
+        }
     }
 }

@@ -38,6 +38,7 @@ namespace ast
     struct class_definition;
     struct while_statement;
     struct block_statement;
+    struct for_in_statement;
 
     struct visitor_base
     {
@@ -54,6 +55,7 @@ namespace ast
         virtual void visit(class_definition const&) = 0;
         virtual void visit(while_statement const&) = 0;
         virtual void visit(block_statement const&) = 0;
+        virtual void visit(for_in_statement const&) = 0;
     };
 
     struct ast_base
@@ -276,6 +278,23 @@ namespace ast
         }
     };
 
+    struct for_in_statement : ast_base
+    {
+        node_pointer iterator_;
+        node_pointer source_;
+        node_pointer statement_;
+
+        for_in_statement(node_pointer iterator_, node_pointer source_, node_pointer statement_)
+            : iterator_(std::move(iterator_)), source_(std::move(source_)), statement_(std::move(statement_))
+        {
+        }
+
+        void accept(visitor_base* visitor) override
+        {
+            visitor->visit(*this);
+        }
+    };
+
     class print_visitor : public visitor_base
     {
     private:
@@ -310,12 +329,15 @@ namespace ast
         void visit(class_definition const&) override;
         void visit(while_statement const&) override;
         void visit(block_statement const&) override;
+        void visit(for_in_statement const&) override;
 
     private:
         std::ostream& output_;
         std::uint32_t indent_;
 
         static std::string op(int oper);
+
+        void statement(ast::node_pointer const& stmt);
     };
 
     inline std::ostream& operator<<(std::ostream& os, node_pointer const& node)

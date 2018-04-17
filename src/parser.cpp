@@ -577,7 +577,17 @@ namespace parser
 
     ast::node_pointer parser::for_statement()
     {
-        return ast::node_pointer();
+        // TODO: There are multiple types of `for` statements
+        // TODO: For now we will let ordinary numeric iteration be delegated to the `while` loop
+        // TODO: and handle the `for ... in ...` type of loop here
+
+        match(token::t_for);
+        auto iterator = source_expression();
+        match(':');
+        auto source = source_expression();
+        auto stmt = statement();
+
+        return std::move(std::make_unique<ast::for_in_statement>(std::move(iterator), std::move(source), std::move(stmt)));
     }
 
     ast::node_pointer parser::if_statement()

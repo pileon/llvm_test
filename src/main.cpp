@@ -134,6 +134,8 @@ namespace
                        print("First line")
                        print("i = ", i)
                    }
+                   for n : a
+                       print(n)
                }
             )");
 
