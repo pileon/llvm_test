@@ -37,6 +37,7 @@ namespace ast
     struct conditional;
     struct class_definition;
     struct while_statement;
+    struct block_statement;
 
     struct visitor_base
     {
@@ -52,6 +53,7 @@ namespace ast
         virtual void visit(conditional const&) = 0;
         virtual void visit(class_definition const&) = 0;
         virtual void visit(while_statement const&) = 0;
+        virtual void visit(block_statement const&) = 0;
     };
 
     struct ast_base
@@ -245,12 +247,26 @@ namespace ast
 
     struct while_statement : ast_base
     {
-
         node_pointer condition_;
         node_pointer statement_;
 
         while_statement(node_pointer condition_, node_pointer statement_)
             : condition_(std::move(condition_)), statement_(std::move(statement_))
+        {
+        }
+
+        void accept(visitor_base* visitor) override
+        {
+            visitor->visit(*this);
+        }
+    };
+
+    struct block_statement : ast_base
+    {
+        std::vector<node_pointer> statements_;
+
+        block_statement(std::vector<node_pointer> statements_)
+            : statements_(std::move(statements_))
         {
         }
 
@@ -293,6 +309,7 @@ namespace ast
         void visit(conditional const&) override;
         void visit(class_definition const&) override;
         void visit(while_statement const&) override;
+        void visit(block_statement const&) override;
 
     private:
         std::ostream& output_;

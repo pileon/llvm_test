@@ -242,11 +242,32 @@ namespace ast
     {
         output_ << indent(indent_) << "while ";
         w.condition_->accept(this);
-        output_ << '\n';
+
+        if (dynamic_cast<ast::block_statement*>(w.statement_.get()))
+        {
+            w.statement_->accept(this);
+        }
+        else
+        {
+            output_ << '\n';
+            indent_ += 4;
+            output_ << indent(indent_);
+            w.statement_->accept(this);
+            indent_ -= 4;
+            output_ << '\n';
+        }
+    }
+
+    void print_visitor::visit(ast::block_statement const& b)
+    {
+        output_ << " {\n";
         indent_ += 4;
-        output_ << indent(indent_);
-        w.statement_->accept(this);
+        for (auto const& statement : b.statements_)
+        {
+            output_ << indent(indent_) << statement;
+            //statement->accept(this);
+            output_ << '\n';
+        }
         indent_ -= 4;
-        output_ << '\n';
     }
 }

@@ -130,8 +130,10 @@ namespace
                    }
                }
                o = function(i) {
-                   while i < 10
+                   while i < 10 {
+                       print("First line")
                        print("i = ", i)
+                   }
                }
             )");
 

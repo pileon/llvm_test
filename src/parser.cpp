@@ -95,6 +95,11 @@ namespace parser
             return conditional_statement();
         }
 
+        if (current_ == '{')
+        {
+            return block_statement();
+        }
+
         // TODO: Other statements
 
         return conditional_expression();
@@ -578,5 +583,19 @@ namespace parser
     ast::node_pointer parser::if_statement()
     {
         return ast::node_pointer();
+    }
+
+    ast::node_pointer parser::block_statement()
+    {
+        std::vector<ast::node_pointer> statements;
+
+        match('{');
+        do
+        {
+            statements.push_back(std::move(statement()));
+        } while (current_ != '}');
+        match('}');
+
+        return std::move(std::make_unique<ast::block_statement>(std::move(statements)));
     }
 }
