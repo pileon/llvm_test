@@ -55,7 +55,7 @@ namespace ast
             statement->accept(this);
         }
         indent_ -= 4;
-        output_ << indent(indent_) << "}\n";
+        output_ << indent(indent_) << "}";
     }
 
     void print_visitor::visit(identifier const& i)
@@ -208,5 +208,33 @@ namespace ast
                 return "<unknown>";
             }
         }
+    }
+
+    void print_visitor::visit(class_definition const& c)
+    {
+        output_ << "class";
+
+        if (!c.inherits.empty())
+        {
+            output_ << " (";
+            for (auto i = begin(c.inherits); i != end(c.inherits); ++i)
+            {
+                (*i)->accept(this);
+                if (i + 1 != end(c.inherits))
+                {
+                    output_ << ", ";
+                }
+            }
+            output_ << ')';
+        }
+
+        output_ << " {\n";
+        indent_ += 4;
+        for (auto const& property : c.properties)
+        {
+            property->accept(this);
+        }
+        indent_ -= 4;
+        output_ << indent(indent_) << "}";
     }
 }

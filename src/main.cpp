@@ -129,6 +129,12 @@ namespace
                    x = a + b
                    y = a * b
                }
+               n = class(x, y, z) {
+                   a = 5
+                   b = function(y) {
+                       a = y
+                   }
+               }
             )");
 
         lexer::lexer l(input, "<stdin>");

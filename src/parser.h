@@ -58,7 +58,8 @@ namespace parser
         ast::node_pointer select_expression();
         ast::node_pointer suffix_expression();
         ast::node_pointer primary_expression();
-        ast::node_pointer function();
+        ast::node_pointer function_definition();
+        ast::node_pointer class_definition();
 
         void expected(char, lexer::token);
         void expected(lexer::token, lexer::token);

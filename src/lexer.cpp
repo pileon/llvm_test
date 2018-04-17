@@ -171,6 +171,7 @@ namespace lexer
             { "if"          , token::t_if           },
             { "elif"        , token::t_elif         },
             { "else"        , token::t_else         },
+            { "class"       , token::t_class        },
         };
 
         if (auto const it = keywords.find(word); it != end(keywords))
