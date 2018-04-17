@@ -35,6 +35,7 @@ namespace ast
     struct call;
     struct special_value;
     struct conditional;
+    struct class_definition;
 
     struct visitor_base
     {
@@ -48,6 +49,7 @@ namespace ast
         virtual void visit(call const&) = 0;
         virtual void visit(special_value const&) = 0;
         virtual void visit(conditional const&) = 0;
+        virtual void visit(class_definition const&) = 0;
     };
 
     struct ast_base
@@ -228,6 +230,17 @@ namespace ast
         }
     };
 
+    struct class_definition : ast_base
+    {
+        std::vector<node_pointer> inherits;
+        std::vector<node_pointer> properties;
+
+        void accept(visitor_base* visitor) override
+        {
+            visitor->visit(*this);
+        }
+    };
+
     class print_visitor : public visitor_base
     {
     private:
@@ -259,6 +272,7 @@ namespace ast
         void visit(call const&) override;
         void visit(special_value const&) override;
         void visit(conditional const&) override;
+        void visit(class_definition const&) override;
 
     private:
         std::ostream& output_;

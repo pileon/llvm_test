@@ -48,7 +48,11 @@ namespace lexer
             t_null          = -19,
             t_if            = -20,
             t_elif          = -21,
-            t_else          = -22
+            t_else          = -22,
+            t_class         = -23,
+            t_public        = -24,
+            t_private       = -25,
+            t_final         = -26
         };
 
         using value_type = std::any;

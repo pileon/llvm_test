@@ -41,6 +41,10 @@ namespace lexer
             { t_if              , "if"              },
             { t_elif            , "elif"            },
             { t_else            , "else"            },
+            { t_class           , "class"           },
+            { t_public          , "public"          },
+            { t_private         , "private"         },
+            { t_final           , "final"           },
         };
 
         if (auto const& i = token_to_string.find(token_); i != end(token_to_string))

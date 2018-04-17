@@ -431,7 +431,12 @@ namespace parser
         else if (current_ == token::t_function)
         {
             current_ = lexer_.next();
-            return function();
+            return function_definition();
+        }
+        else if (current_ == token::t_class)
+        {
+            current_ = lexer_.next();
+            return class_definition();
         }
         else
         {
@@ -445,7 +450,7 @@ namespace parser
         return node;
     }
 
-    ast::node_pointer parser::function()
+    ast::node_pointer parser::function_definition()
     {
         auto fun = std::make_unique<ast::function>();
         match('(');
@@ -479,5 +484,41 @@ namespace parser
         fun->arguments  = std::move(arguments);
         fun->statements = std::move(statements);
         return std::move(fun);
+    }
+
+    ast::node_pointer parser::class_definition()
+    {
+        auto cls = std::make_unique<ast::class_definition>();
+
+        if (current_ == '(')
+        {
+            do
+            {
+                current_ = lexer_.next();
+
+                auto base = source_expression();
+                cls->inherits.push_back(std::move(base));
+            } while (current_ == ',');
+
+            match(')');
+        }
+
+        if (current_ == '{')
+        {
+            current_ = lexer_.next();
+
+            do
+            {
+                auto dest = destination_expression();
+                match('=');
+                auto source = source_expression();
+
+                cls->properties.push_back(std::make_unique<ast::assignment>(std::move(dest), std::move(source)));
+            } while (current_ != '}');
+
+            match('}');
+        }
+
+        return std::move(cls);
     }
 }
