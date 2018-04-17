@@ -341,7 +341,7 @@ namespace ast
 
         static std::string op(int oper);
 
-        void statement(ast::node_pointer const& stmt);
+        void possible_statement(ast::node_pointer const& stmt);
     };
 
     inline std::ostream& operator<<(std::ostream& os, node_pointer const& node)
