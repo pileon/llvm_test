@@ -156,6 +156,8 @@ namespace parser
         }
     }
 
+    // TODO: Use an operator-precedence parser for the binary expressions?
+
     ast::node_pointer parser::logic_and_expression()
     {
         auto left = logic_or_expression();
