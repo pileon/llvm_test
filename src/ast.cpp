@@ -153,10 +153,11 @@ namespace ast
     void print_visitor::visit(conditional const& c)
     {
         output_ << "if " << c.condition_;
+
         if (!c.elifs_.empty())
         {
             output_ << '\n';
-            indent_ += 4;
+            //indent_ += 4;
 
             output_ << indent(indent_ + 4) << c.expression_ << '\n';
 
@@ -165,9 +166,12 @@ namespace ast
                 auto const& elif = dynamic_cast<ast::binary const&>(*elif_iter);
                 output_ << indent(indent_) << "elif ";
                 elif.left->accept(this);
-                output_ << '\n';
-                output_ << indent(indent_ + 4);
-                elif.right->accept(this);
+                //output_ << '\n';
+                indent_ += 4;
+                possible_statement(elif.right);
+                indent_ -= 4;
+                //output_ << indent(indent_ + 4);
+                //elif.right->accept(this);
                 output_ << '\n';
             }
 
@@ -178,7 +182,7 @@ namespace ast
                 c.els_->accept(this);
             }
 
-            indent_ -= 4;
+            //indent_ -= 4;
         }
         else
         {
@@ -262,20 +266,23 @@ namespace ast
         //output_ << indent(indent_) << "while ";
         output_ << "while ";
         w.condition_->accept(this);
+
+        indent_ += 4;
         possible_statement(w.statement_);
+        indent_ -= 4;
     }
 
     void print_visitor::visit(ast::block_statement const& b)
     {
-        indent_ += 4;
+        //indent_ += 4;
         for (auto const& stmt : b.statements_)
         {
             possible_statement(stmt);
             //output_ << indent(indent_);
             //stmt->accept(this);
-            output_ << '\n';
+            //output_ << '\n';
         }
-        indent_ -= 4;
+        //indent_ -= 4;
     }
 
     void print_visitor::visit(for_in_statement const& f)
@@ -286,7 +293,9 @@ namespace ast
         output_ << " : ";
         f.source_->accept(this);
 
+        indent_ += 4;
         possible_statement(f.statement_);
+        indent_ -= 4;
     }
 
     void print_visitor::possible_statement(ast::node_pointer const& stmt)
@@ -295,14 +304,17 @@ namespace ast
         {
             output_ << " {";
         }
+        else
+        {
+            output_ << '\n';
+        }
 
-        output_ << '\n';
         output_ << indent(indent_);
         stmt->accept(this);
 
         if (dynamic_cast<ast::block_statement*>(stmt.get()))
         {
-            output_ << "}";
+            output_ << '\n' << indent(indent_ - 4) << '}';
         }
     }
 }

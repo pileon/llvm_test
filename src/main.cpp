@@ -167,10 +167,10 @@ int main()
     parser_test();
 
     // This seems to be needed when running in Clion from inside WSL
-    //std::cerr << std::flush;
-    //std::clog << std::flush;
-    //std::cout << std::endl << "Please press ENTER to continue..." << std::flush;
-    //std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::cerr << std::flush;
+    std::clog << std::flush;
+    std::cout << std::endl << "Please press ENTER to continue..." << std::flush;
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
     return 0;
 }
