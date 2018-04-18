@@ -28,11 +28,9 @@ namespace ast
 
     void print_visitor::visit(assignment const& a)
     {
-        //output_ << indent(indent_);
         a.left->accept(*this);
         output_ << " = ";
         a.right->accept(*this);
-        //output_ << '\n';
     }
 
     void print_visitor::visit(function const& f)
@@ -52,10 +50,7 @@ namespace ast
         indent_ += 4;
         for (auto const& stmt : f.statements)
         {
-            //output_ << indent(indent_);
-            //stmt->accept(this);
             possible_statement(stmt);
-            //output_ << '\n';
         }
         indent_ -= 4;
         output_ << '\n';
@@ -157,21 +152,19 @@ namespace ast
         if (!c.elifs_.empty())
         {
             output_ << '\n';
-            //indent_ += 4;
 
-            output_ << indent(indent_ + 4) << c.expression_ << '\n';
+            output_ << indent(indent_ + 4);
+            c.expression_->accept(this);
+            output_ << '\n';
 
             for (auto const& elif_iter : c.elifs_)
             {
                 auto const& elif = dynamic_cast<ast::binary const&>(*elif_iter);
                 output_ << indent(indent_) << "elif ";
                 elif.left->accept(this);
-                //output_ << '\n';
                 indent_ += 4;
                 possible_statement(elif.right);
                 indent_ -= 4;
-                //output_ << indent(indent_ + 4);
-                //elif.right->accept(this);
                 output_ << '\n';
             }
 
@@ -181,8 +174,6 @@ namespace ast
                 output_ << indent(indent_ + 4);
                 c.els_->accept(this);
             }
-
-            //indent_ -= 4;
         }
         else
         {
@@ -263,7 +254,6 @@ namespace ast
 
     void print_visitor::visit(ast::while_statement const& w)
     {
-        //output_ << indent(indent_) << "while ";
         output_ << "while ";
         w.condition_->accept(this);
 
@@ -274,20 +264,14 @@ namespace ast
 
     void print_visitor::visit(ast::block_statement const& b)
     {
-        //indent_ += 4;
         for (auto const& stmt : b.statements_)
         {
             possible_statement(stmt);
-            //output_ << indent(indent_);
-            //stmt->accept(this);
-            //output_ << '\n';
         }
-        //indent_ -= 4;
     }
 
     void print_visitor::visit(for_in_statement const& f)
     {
-        //output_ << indent(indent_) << "for ";
         output_ << "for ";
         f.iterator_->accept(this);
         output_ << " : ";
